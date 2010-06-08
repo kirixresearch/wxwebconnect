@@ -17,6 +17,7 @@
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
 #include <wx/file.h>
+#include <wx/event.h>
 #include "webframe.h"
 #include "webcontrol.h"
 #include "nsinclude.h"
@@ -85,6 +86,84 @@ WX_DEFINE_ARRAY_PTR(ContentListener*, ContentListenerPtrArray);
 
 
 class PluginListProvider;
+
+#define MapKey(mozillaKey, wxKey) case (nsIDOMKeyEvent :: mozillaKey): return wxKey;
+#define MapIdenticalKey(keyCode) MapKey(DOM_VK_##keyCode, WXK_##keyCode)
+
+int MapKeyCode(PRUint32 keyCode)    {
+    switch(keyCode) {
+        MapIdenticalKey(CANCEL);
+        MapIdenticalKey(HELP);
+        MapKey(DOM_VK_BACK_SPACE, WXK_BACK);
+        MapIdenticalKey(TAB);
+        MapIdenticalKey(CLEAR);
+        MapIdenticalKey(RETURN);
+        MapKey(DOM_VK_ENTER, WXK_NUMPAD_ENTER);
+        MapIdenticalKey(SHIFT);
+        MapIdenticalKey(CONTROL);
+        MapIdenticalKey(ALT);
+        MapIdenticalKey(PAUSE);
+        MapKey(DOM_VK_CAPS_LOCK, WXK_CAPITAL);
+        MapIdenticalKey(ESCAPE);
+        MapIdenticalKey(SPACE);
+        MapKey(DOM_VK_PAGE_UP, WXK_PAGEUP);
+        MapKey(DOM_VK_PAGE_DOWN, WXK_PAGEDOWN);
+        MapIdenticalKey(END);
+        MapIdenticalKey(HOME);
+        MapIdenticalKey(LEFT);
+        MapIdenticalKey(UP);
+        MapIdenticalKey(RIGHT);
+        MapIdenticalKey(DOWN);
+        MapKey(DOM_VK_PRINTSCREEN, WXK_PRINT);
+        MapIdenticalKey(INSERT);
+        MapIdenticalKey(DELETE);
+        MapKey(DOM_VK_CONTEXT_MENU, WXK_MENU);
+        MapIdenticalKey(NUMPAD0);
+        MapIdenticalKey(NUMPAD1);
+        MapIdenticalKey(NUMPAD2);
+        MapIdenticalKey(NUMPAD3);
+        MapIdenticalKey(NUMPAD4);
+        MapIdenticalKey(NUMPAD5);
+        MapIdenticalKey(NUMPAD6);
+        MapIdenticalKey(NUMPAD7);
+        MapIdenticalKey(NUMPAD8);
+        MapIdenticalKey(NUMPAD9);
+        MapIdenticalKey(MULTIPLY);
+        MapIdenticalKey(ADD);
+        MapIdenticalKey(SEPARATOR);
+        MapIdenticalKey(SUBTRACT);
+        MapIdenticalKey(DECIMAL);
+        MapIdenticalKey(DIVIDE);
+        MapIdenticalKey(F1);
+        MapIdenticalKey(F2);
+        MapIdenticalKey(F3);
+        MapIdenticalKey(F4);
+        MapIdenticalKey(F5);
+        MapIdenticalKey(F6);
+        MapIdenticalKey(F7);
+        MapIdenticalKey(F8);
+        MapIdenticalKey(F9);
+        MapIdenticalKey(F10);
+        MapIdenticalKey(F11);
+        MapIdenticalKey(F12);
+        MapIdenticalKey(F13);
+        MapIdenticalKey(F14);
+        MapIdenticalKey(F15);
+        MapIdenticalKey(F16);
+        MapIdenticalKey(F17);
+        MapIdenticalKey(F18);
+        MapIdenticalKey(F19);
+        MapIdenticalKey(F20);
+        MapIdenticalKey(F21);
+        MapIdenticalKey(F22);
+        MapIdenticalKey(F23);
+        MapIdenticalKey(F24);
+        MapKey(DOM_VK_NUM_LOCK, WXK_NUMLOCK);
+        MapKey(DOM_VK_SCROLL_LOCK, WXK_SCROLL);
+        
+        default: return (int)keyCode;
+    }
+}
 
 
 // GeckoEngine is an internal class wchich manages the xulrunner engine;
@@ -254,6 +333,18 @@ void BrowserChrome::ChromeInit()
     nsresult res;
 
     res = m_wnd->m_ptrs->m_event_target->AddEventListener(
+                                            NS_LITERAL_STRING("keydown"),
+                                            this,
+                                            PR_TRUE,
+                                            PR_FALSE, 2);
+
+    res = m_wnd->m_ptrs->m_event_target->AddEventListener(
+                                            NS_LITERAL_STRING("keyup"),
+                                            this,
+                                            PR_TRUE,
+                                            PR_FALSE, 2);
+
+    res = m_wnd->m_ptrs->m_event_target->AddEventListener(
                                             NS_LITERAL_STRING("mousedown"),
                                             this,
                                             PR_TRUE,
@@ -306,6 +397,16 @@ void BrowserChrome::ChromeInit()
 void BrowserChrome::ChromeUninit()
 {
     nsresult res;
+
+    res = m_wnd->m_ptrs->m_event_target->RemoveEventListener(
+                                            NS_LITERAL_STRING("keydown"),
+                                            this,
+                                            PR_TRUE);
+
+    res = m_wnd->m_ptrs->m_event_target->RemoveEventListener(
+                                            NS_LITERAL_STRING("keyup"),
+                                            this,
+                                            PR_TRUE);
     
     res = m_wnd->m_ptrs->m_event_target->RemoveEventListener(
                                             NS_LITERAL_STRING("mousedown"),
@@ -858,6 +959,51 @@ NS_IMETHODIMP BrowserChrome::HandleEvent(nsIDOMEvent* evt)
         return NS_OK;
     }
     
+    if (type == wxT("keydown") ||
+        type == wxT("keyup"))
+    {
+        int evtid;
+        if (type == wxT("keydown"))
+        {
+            evtid = wxEVT_KEY_DOWN;
+        }
+         else if (type == wxT("keyup"))
+        {
+            evtid = wxEVT_KEY_UP;
+        }
+         else
+        {
+            wxFAIL_MSG(wxT("NS event type needs to be mapped to wxWebConnect event type"));
+        }
+
+        wxKeyEvent _wxKeyEvent(evtid);
+
+        ns_smartptr<nsIDOMKeyEvent> key_evt = nsToSmart(evt);
+        if (!key_evt)
+            return NS_ERROR_NOT_IMPLEMENTED;
+
+        PRBool altKey, shiftKey, ctrlKey, metaKey;
+        PRUint32 keyCode;
+        key_evt->GetAltKey(&altKey);
+        key_evt->GetShiftKey(&shiftKey);
+        key_evt->GetCtrlKey(&ctrlKey);
+        key_evt->GetMetaKey(&metaKey);
+        // XXX: Will this need some translating?
+        key_evt->GetKeyCode(&keyCode);
+
+        _wxKeyEvent.m_altDown = (bool)altKey;
+        _wxKeyEvent.m_shiftDown = (bool)shiftKey;
+        _wxKeyEvent.m_controlDown = (bool)ctrlKey;
+        _wxKeyEvent.m_metaDown = (bool)metaKey;
+        _wxKeyEvent.m_keyCode = MapKeyCode(keyCode);
+
+        // fill out and send a mouse event
+        _wxKeyEvent.SetEventObject(m_wnd);
+
+        m_wnd->GetEventHandler()->ProcessEvent(_wxKeyEvent);
+    
+        return NS_OK;
+    }
 
     if (type == wxT("mousedown") ||
         type == wxT("mouseup") ||
