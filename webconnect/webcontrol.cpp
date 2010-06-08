@@ -2866,6 +2866,32 @@ wxString wxWebControl::GetCurrentURI() const
     return ns2wx(spec);
 }
 
+bool wxWebControl::SetContent(const wxString& strBaseURI, const wxString& strContent, const wxString& strContentType)
+{
+    nsresult rv;
+    m_content_loaded = false;
+
+    ns_smartptr<nsIURI> uri;
+    if (!strBaseURI.IsEmpty())
+        uri = nsNewURI(strBaseURI);
+
+    nsCString nsContentType;
+    wx2ns(strContentType, nsContentType);
+
+    std::string strutf8data = std::string(strContent.ToUTF8());
+
+    ns_smartptr<nsIWebBrowserStream> browserStream(m_ptrs->m_web_browser);
+    if (!browserStream.p)   {
+        return false;
+    }
+
+    browserStream->OpenStream(uri, nsContentType);
+    browserStream->AppendToStream((const PRUint8*)strutf8data.c_str(), strutf8data.length());
+    browserStream->CloseStream();
+
+    return true;
+}
+
 // (METHOD) wxWebControl::GoForward
 // Description:
 //

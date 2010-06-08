@@ -388,6 +388,8 @@ public:
     void OpenURI(const wxString& uri,
                  unsigned int flags = wxWEB_LOAD_NORMAL,
                  wxWebPostData* post_data = NULL);
+
+    bool SetContent(const wxString& strBaseURI, const wxString& strContent, const wxString& strContentType = wxT("text/html"));
                      
     wxString GetCurrentURI() const;
     void GoForward();
