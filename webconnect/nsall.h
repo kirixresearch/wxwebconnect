@@ -13550,6 +13550,121 @@ NS_IMETHODIMP nsInputStream::IsNonBlocking(PRBool *_retval)
 /* End of implementation class template. */
 #endif
 
+
+/* starting interface:    nsIInputStreamChannel */
+#define NS_IINPUTSTREAMCHANNEL_IID_STR "274c4d7a-2447-4ceb-a6de-80db1b83f5d2"
+
+#define NS_IINPUTSTREAMCHANNEL_IID \
+  {0x274c4d7a, 0x2447, 0x4ceb, \
+    { 0xa6, 0xde, 0x80, 0xdb, 0x1b, 0x83, 0xf5, 0xd2 }}
+
+/**
+ * nsIInputStreamChannel
+ *
+ * This interface provides methods to initialize an input stream channel.
+ * The input stream channel serves as a data pump for an input stream.
+ */
+class NS_NO_VTABLE nsIInputStreamChannel : public nsISupports {
+ public: 
+
+  NS_DEFINE_STATIC_IID_ACCESSOR(NS_IINPUTSTREAMCHANNEL_IID)
+
+  /**
+     * Sets the URI for this channel.  This must be called before the
+     * channel is opened, and it may only be called once.
+     */
+  /* void setURI (in nsIURI aURI); */
+  NS_IMETHOD SetURI(nsIURI *aURI) = 0;
+
+  /**
+     * Get/set the content stream
+     *
+     * This stream contains the data that will be pushed to the channel's
+     * stream listener.  If the stream is non-blocking and supports the
+     * nsIAsyncInputStream interface, then the stream will be read directly.
+     * Otherwise, the stream will be read on a background thread.
+     *
+     * This attribute must be set before the channel is opened, and it may
+     * only be set once.
+     *
+     * @throws NS_ERROR_IN_PROGRESS if the setter is called after the channel
+     * has been opened.
+     */
+  /* attribute nsIInputStream contentStream; */
+  NS_IMETHOD GetContentStream(nsIInputStream * *aContentStream) = 0;
+  NS_IMETHOD SetContentStream(nsIInputStream * aContentStream) = 0;
+
+};
+
+/* Use this macro when declaring classes that implement this interface. */
+#define NS_DECL_NSIINPUTSTREAMCHANNEL \
+  NS_IMETHOD SetURI(nsIURI *aURI); \
+  NS_IMETHOD GetContentStream(nsIInputStream * *aContentStream); \
+  NS_IMETHOD SetContentStream(nsIInputStream * aContentStream); 
+
+/* Use this macro to declare functions that forward the behavior of this interface to another object. */
+#define NS_FORWARD_NSIINPUTSTREAMCHANNEL(_to) \
+  NS_IMETHOD SetURI(nsIURI *aURI) { return _to SetURI(aURI); } \
+  NS_IMETHOD GetContentStream(nsIInputStream * *aContentStream) { return _to GetContentStream(aContentStream); } \
+  NS_IMETHOD SetContentStream(nsIInputStream * aContentStream) { return _to SetContentStream(aContentStream); } 
+
+/* Use this macro to declare functions that forward the behavior of this interface to another object in a safe way. */
+#define NS_FORWARD_SAFE_NSIINPUTSTREAMCHANNEL(_to) \
+  NS_IMETHOD SetURI(nsIURI *aURI) { return !_to ? NS_ERROR_NULL_POINTER : _to->SetURI(aURI); } \
+  NS_IMETHOD GetContentStream(nsIInputStream * *aContentStream) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetContentStream(aContentStream); } \
+  NS_IMETHOD SetContentStream(nsIInputStream * aContentStream) { return !_to ? NS_ERROR_NULL_POINTER : _to->SetContentStream(aContentStream); } 
+
+#if 0
+/* Use the code below as a template for the implementation class for this interface. */
+
+/* Header file */
+class nsInputStreamChannel : public nsIInputStreamChannel
+{
+public:
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIINPUTSTREAMCHANNEL
+
+  nsInputStreamChannel();
+
+private:
+  ~nsInputStreamChannel();
+
+protected:
+  /* additional members */
+};
+
+/* Implementation file */
+NS_IMPL_ISUPPORTS1(nsInputStreamChannel, nsIInputStreamChannel)
+
+nsInputStreamChannel::nsInputStreamChannel()
+{
+  /* member initializers and constructor code */
+}
+
+nsInputStreamChannel::~nsInputStreamChannel()
+{
+  /* destructor code */
+}
+
+/* void setURI (in nsIURI aURI); */
+NS_IMETHODIMP nsInputStreamChannel::SetURI(nsIURI *aURI)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* attribute nsIInputStream contentStream; */
+NS_IMETHODIMP nsInputStreamChannel::GetContentStream(nsIInputStream * *aContentStream)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+NS_IMETHODIMP nsInputStreamChannel::SetContentStream(nsIInputStream * aContentStream)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* End of implementation class template. */
+#endif
+
 class nsIProtocolHandler; /* forward declaration */
 
 class nsIChannel; /* forward declaration */
@@ -18220,6 +18335,216 @@ NS_IMETHODIMP nsTransfer::Init(nsIURI *source, nsIURI *target, const nsAString &
 /* End of implementation class template. */
 #endif
 
+
+/* starting interface:    nsIMutable */
+#define NS_IMUTABLE_IID_STR "321578d0-03c1-4d95-8821-021ac612d18d"
+
+#define NS_IMUTABLE_IID \
+  {0x321578d0, 0x03c1, 0x4d95, \
+    { 0x88, 0x21, 0x02, 0x1a, 0xc6, 0x12, 0xd1, 0x8d }}
+
+/**
+ * nsIMutable defines an interface to be implemented by objects which
+ * can be made immutable.
+ */
+class NS_NO_VTABLE nsIMutable : public nsISupports {
+ public: 
+
+  NS_DEFINE_STATIC_IID_ACCESSOR(NS_IMUTABLE_IID)
+
+  /**
+     * Control whether or not this object can be modified.  If the flag is
+     * false, no modification is allowed.  Once the flag has been set to false,
+     * it cannot be reset back to true -- attempts to do so throw
+     * NS_ERROR_INVALID_ARG.
+     */
+  /* attribute boolean mutable; */
+  NS_IMETHOD GetMutable(PRBool *aMutable) = 0;
+  NS_IMETHOD SetMutable(PRBool aMutable) = 0;
+
+};
+
+/* Use this macro when declaring classes that implement this interface. */
+#define NS_DECL_NSIMUTABLE \
+  NS_IMETHOD GetMutable(PRBool *aMutable); \
+  NS_IMETHOD SetMutable(PRBool aMutable); 
+
+/* Use this macro to declare functions that forward the behavior of this interface to another object. */
+#define NS_FORWARD_NSIMUTABLE(_to) \
+  NS_IMETHOD GetMutable(PRBool *aMutable) { return _to GetMutable(aMutable); } \
+  NS_IMETHOD SetMutable(PRBool aMutable) { return _to SetMutable(aMutable); } 
+
+/* Use this macro to declare functions that forward the behavior of this interface to another object in a safe way. */
+#define NS_FORWARD_SAFE_NSIMUTABLE(_to) \
+  NS_IMETHOD GetMutable(PRBool *aMutable) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetMutable(aMutable); } \
+  NS_IMETHOD SetMutable(PRBool aMutable) { return !_to ? NS_ERROR_NULL_POINTER : _to->SetMutable(aMutable); } 
+
+#if 0
+/* Use the code below as a template for the implementation class for this interface. */
+
+/* Header file */
+class nsMutable : public nsIMutable
+{
+public:
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIMUTABLE
+
+  nsMutable();
+
+private:
+  ~nsMutable();
+
+protected:
+  /* additional members */
+};
+
+/* Implementation file */
+NS_IMPL_ISUPPORTS1(nsMutable, nsIMutable)
+
+nsMutable::nsMutable()
+{
+  /* member initializers and constructor code */
+}
+
+nsMutable::~nsMutable()
+{
+  /* destructor code */
+}
+
+/* attribute boolean mutable; */
+NS_IMETHODIMP nsMutable::GetMutable(PRBool *aMutable)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+NS_IMETHODIMP nsMutable::SetMutable(PRBool aMutable)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* End of implementation class template. */
+#endif
+
+
+/* starting interface:    nsIStandardURL */
+#define NS_ISTANDARDURL_IID_STR "babd6cca-ebe7-4329-967c-d6b9e33caa81"
+
+#define NS_ISTANDARDURL_IID \
+  {0xbabd6cca, 0xebe7, 0x4329, \
+    { 0x96, 0x7c, 0xd6, 0xb9, 0xe3, 0x3c, 0xaa, 0x81 }}
+
+/**
+ * nsIStandardURL defines the interface to an URL with the standard
+ * file path format common to protocols like http, ftp, and file.
+ * It supports initialization from a relative path and provides
+ * some customization on how URLs are normalized.
+ */
+class NS_NO_VTABLE nsIStandardURL : public nsIMutable {
+ public: 
+
+  NS_DEFINE_STATIC_IID_ACCESSOR(NS_ISTANDARDURL_IID)
+
+  /**
+     * blah:foo/bar    => blah://foo/bar
+     * blah:/foo/bar   => blah:///foo/bar
+     * blah://foo/bar  => blah://foo/bar
+     * blah:///foo/bar => blah:///foo/bar
+     */
+  enum { URLTYPE_STANDARD = 1U };
+
+  /**
+     * blah:foo/bar    => blah://foo/bar
+     * blah:/foo/bar   => blah://foo/bar
+     * blah://foo/bar  => blah://foo/bar
+     * blah:///foo/bar => blah://foo/bar
+     */
+  enum { URLTYPE_AUTHORITY = 2U };
+
+  /**
+     * blah:foo/bar    => blah:///foo/bar
+     * blah:/foo/bar   => blah:///foo/bar
+     * blah://foo/bar  => blah://foo/bar
+     * blah:///foo/bar => blah:///foo/bar
+     */
+  enum { URLTYPE_NO_AUTHORITY = 3U };
+
+  /**
+     * Initialize a standard URL.
+     *
+     * @param aUrlType       - one of the URLTYPE_ flags listed above.
+     * @param aDefaultPort   - if the port parsed from the URL string matches
+     *                         this port, then the port will be removed from the
+     *                         canonical form of the URL.
+     * @param aSpec          - URL string.
+     * @param aOriginCharset - the charset from which this URI string
+     *                         originated.  this corresponds to the charset
+     *                         that should be used when communicating this
+     *                         URI to an origin server, for example.  if
+     *                         null, then provide aBaseURI implements this
+     *                         interface, the origin charset of aBaseURI will
+     *                         be assumed, otherwise defaulting to UTF-8 (i.e.,
+     *                         no charset transformation from aSpec).
+     * @param aBaseURI       - if null, aSpec must specify an absolute URI.
+     *                         otherwise, aSpec will be resolved relative
+     *                         to aBaseURI.
+     */
+  /* void init (in unsigned long aUrlType, in long aDefaultPort, in AUTF8String aSpec, in string aOriginCharset, in nsIURI aBaseURI); */
+  NS_IMETHOD Init(PRUint32 aUrlType, PRInt32 aDefaultPort, const nsACString & aSpec, const char *aOriginCharset, nsIURI *aBaseURI) = 0;
+
+};
+
+/* Use this macro when declaring classes that implement this interface. */
+#define NS_DECL_NSISTANDARDURL \
+  NS_IMETHOD Init(PRUint32 aUrlType, PRInt32 aDefaultPort, const nsACString & aSpec, const char *aOriginCharset, nsIURI *aBaseURI); 
+
+/* Use this macro to declare functions that forward the behavior of this interface to another object. */
+#define NS_FORWARD_NSISTANDARDURL(_to) \
+  NS_IMETHOD Init(PRUint32 aUrlType, PRInt32 aDefaultPort, const nsACString & aSpec, const char *aOriginCharset, nsIURI *aBaseURI) { return _to Init(aUrlType, aDefaultPort, aSpec, aOriginCharset, aBaseURI); } 
+
+/* Use this macro to declare functions that forward the behavior of this interface to another object in a safe way. */
+#define NS_FORWARD_SAFE_NSISTANDARDURL(_to) \
+  NS_IMETHOD Init(PRUint32 aUrlType, PRInt32 aDefaultPort, const nsACString & aSpec, const char *aOriginCharset, nsIURI *aBaseURI) { return !_to ? NS_ERROR_NULL_POINTER : _to->Init(aUrlType, aDefaultPort, aSpec, aOriginCharset, aBaseURI); } 
+
+#if 0
+/* Use the code below as a template for the implementation class for this interface. */
+
+/* Header file */
+class nsStandardURL : public nsIStandardURL
+{
+public:
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSISTANDARDURL
+
+  nsStandardURL();
+
+private:
+  ~nsStandardURL();
+
+protected:
+  /* additional members */
+};
+
+/* Implementation file */
+NS_IMPL_ISUPPORTS1(nsStandardURL, nsIStandardURL)
+
+nsStandardURL::nsStandardURL()
+{
+  /* member initializers and constructor code */
+}
+
+nsStandardURL::~nsStandardURL()
+{
+  /* destructor code */
+}
+
+/* void init (in unsigned long aUrlType, in long aDefaultPort, in AUTF8String aSpec, in string aOriginCharset, in nsIURI aBaseURI); */
+NS_IMETHODIMP nsStandardURL::Init(PRUint32 aUrlType, PRInt32 aDefaultPort, const nsACString & aSpec, const char *aOriginCharset, nsIURI *aBaseURI)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* End of implementation class template. */
+#endif
+
 class nsIRequest; /* forward declaration */
 
 class nsIStreamListener; /* forward declaration */
@@ -20619,6 +20944,668 @@ NS_IMETHODIMP nsScriptSecurityManager::GetPrincipalFromContext(JSContext * cx, n
 
 /* boolean securityCompareURIs (in nsIURI subject_uri, in nsIURI object_uri); */
 NS_IMETHODIMP nsScriptSecurityManager::SecurityCompareURIs(nsIURI *subject_uri, nsIURI *object_uri, PRBool *_retval)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* End of implementation class template. */
+#endif
+
+
+/* starting interface:    nsIProtocolHandler */
+#define NS_IPROTOCOLHANDLER_IID_STR "15fd6940-8ea7-11d3-93ad-00104ba0fd40"
+
+#define NS_IPROTOCOLHANDLER_IID \
+  {0x15fd6940, 0x8ea7, 0x11d3, \
+    { 0x93, 0xad, 0x00, 0x10, 0x4b, 0xa0, 0xfd, 0x40 }}
+
+class NS_NO_VTABLE nsIProtocolHandler : public nsISupports {
+ public: 
+
+  NS_DEFINE_STATIC_IID_ACCESSOR(NS_IPROTOCOLHANDLER_IID)
+
+  /**
+ * nsIProtocolHandler
+ */
+/**
+     * The scheme of this protocol (e.g., "file").
+     */
+  /* readonly attribute ACString scheme; */
+  NS_IMETHOD GetScheme(nsACString & aScheme) = 0;
+
+  /** 
+     * The default port is the port that this protocol normally uses.
+     * If a port does not make sense for the protocol (e.g., "about:")
+     * then -1 will be returned.
+     */
+  /* readonly attribute long defaultPort; */
+  NS_IMETHOD GetDefaultPort(PRInt32 *aDefaultPort) = 0;
+
+  /**
+     * Returns the protocol specific flags (see flag definitions below).  
+     */
+  /* readonly attribute unsigned long protocolFlags; */
+  NS_IMETHOD GetProtocolFlags(PRUint32 *aProtocolFlags) = 0;
+
+  /**
+     * Makes a URI object that is suitable for loading by this protocol,
+     * where the URI string is given as an UTF-8 string.  The caller may
+     * provide the charset from which the URI string originated, so that
+     * the URI string can be translated back to that charset (if necessary)
+     * before communicating with, for example, the origin server of the URI
+     * string.  (Many servers do not support UTF-8 IRIs at the present time,
+     * so we must be careful about tracking the native charset of the origin
+     * server.)
+     *
+     * @param aSpec          - the URI string in UTF-8 encoding. depending
+     *                         on the protocol implementation, unicode character
+     *                         sequences may or may not be %xx escaped.
+     * @param aOriginCharset - the charset of the document from which this URI
+     *                         string originated.  this corresponds to the
+     *                         charset that should be used when communicating
+     *                         this URI to an origin server, for example.  if
+     *                         null, then UTF-8 encoding is assumed (i.e.,
+     *                         no charset transformation from aSpec).
+     * @param aBaseURI       - if null, aSpec must specify an absolute URI.
+     *                         otherwise, aSpec may be resolved relative
+     *                         to aBaseURI, depending on the protocol. 
+     *                         If the protocol has no concept of relative 
+     *                         URI aBaseURI will simply be ignored.
+     */
+  /* nsIURI newURI (in AUTF8String aSpec, in string aOriginCharset, in nsIURI aBaseURI); */
+  NS_IMETHOD NewURI(const nsACString & aSpec, const char *aOriginCharset, nsIURI *aBaseURI, nsIURI **_retval) = 0;
+
+  /**
+     * Constructs a new channel from the given URI for this protocol handler. 
+     */
+  /* nsIChannel newChannel (in nsIURI aURI); */
+  NS_IMETHOD NewChannel(nsIURI *aURI, nsIChannel **_retval) = 0;
+
+  /**
+     * Allows a protocol to override blacklisted ports.
+     *
+     * This method will be called when there is an attempt to connect to a port 
+     * that is blacklisted.  For example, for most protocols, port 25 (Simple Mail
+     * Transfer) is banned.  When a URI containing this "known-to-do-bad-things" 
+     * port number is encountered, this function will be called to ask if the 
+     * protocol handler wants to override the ban.  
+     */
+  /* boolean allowPort (in long port, in string scheme); */
+  NS_IMETHOD AllowPort(PRInt32 port, const char *scheme, PRBool *_retval) = 0;
+
+  /**************************************************************************
+     * Constants for the protocol flags (the first is the default mask, the
+     * others are deviations):
+     *
+     * NOTE: Implementation must ignore any flags they do not understand.
+     */
+/**
+     * standard full URI with authority component and concept of relative
+     * URIs (http, ftp, ...)
+     */
+  enum { URI_STD = 0U };
+
+  /**
+     * no concept of relative URIs (about, javascript, finger, ...)
+     */
+  enum { URI_NORELATIVE = 1U };
+
+  /**
+     * no authority component (file, ...)
+     */
+  enum { URI_NOAUTH = 2U };
+
+  /**
+     * The URIs for this protocol have no inherent security context, so
+     * documents loaded via this protocol should inherit the security context
+     * from the document that loads them.
+     */
+  enum { URI_INHERITS_SECURITY_CONTEXT = 16U };
+
+  /**
+     * "Automatic" loads that would replace the document (e.g. <meta> refresh,
+     * certain types of XLinks, possibly other loads that the application
+     * decides are not user triggered) are not allowed if the originating (NOT
+     * the target) URI has this protocol flag.  Note that the decision as to
+     * what constitutes an "automatic" load is made externally, by the caller
+     * of nsIScriptSecurityManager::CheckLoadURI.  See documentation for that
+     * method for more information.
+     *
+     * A typical protocol that might want to set this flag is a protocol that
+     * shows highly untrusted content in a viewing area that the user expects
+     * to have a lot of control over, such as an e-mail reader.
+     */
+  enum { URI_FORBIDS_AUTOMATIC_DOCUMENT_REPLACEMENT = 32U };
+
+  /**
+     * +-------------------------------------------------------------------+
+     * |                                                                   |
+     * |  ALL PROTOCOL HANDLERS MUST SET ONE OF THE FOLLOWING FIVE FLAGS.  |
+     * |                                                                   |
+     * +-------------------------------------------------------------------+
+     *
+     * These flags are used to determine who is allowed to load URIs for this
+     * protocol.  Note that if a URI is nested, only the flags for the
+     * innermost URI matter.  See nsINestedURI.
+     *
+     * If none of these five flags are set, the URI must be treated as if it
+     * had the URI_LOADABLE_BY_ANYONE flag set, for compatibility with protocol
+     * handlers written against Gecko 1.8 or earlier.  In this case, there may
+     * be run-time warning messages indicating that a "default insecure"
+     * assumption is being made.  At some point in the futures (Mozilla 2.0,
+     * most likely), these warnings will become errors.
+     */
+/**
+     * The URIs for this protocol can be loaded by anyone.  For example, any
+     * website should be allowed to trigger a load of a URI for this protocol.
+     * Web-safe protocols like "http" should set this flag.
+     */
+  enum { URI_LOADABLE_BY_ANYONE = 64U };
+
+  /**
+     * The URIs for this protocol are UNSAFE if loaded by untrusted (web)
+     * content and may only be loaded by privileged code (for example, code
+     * which has the system principal).  Various internal protocols should set
+     * this flag.
+     */
+  enum { URI_DANGEROUS_TO_LOAD = 128U };
+
+  /**
+     * The URIs for this protocol point to resources that are part of the
+     * application's user interface.  There are cases when such resources may
+     * be made accessible to untrusted content such as web pages, so this is
+     * less restrictive than URI_DANGEROUS_TO_LOAD but more restrictive than
+     * URI_LOADABLE_BY_ANYONE.  See the documentation for
+     * nsIScriptSecurityManager::CheckLoadURI.
+     */
+  enum { URI_IS_UI_RESOURCE = 256U };
+
+  /**
+     * Loading of URIs for this protocol from other origins should only be
+     * allowed if those origins should have access to the local filesystem.
+     * It's up to the application to decide what origins should have such
+     * access.  Protocols like "file" that point to local data should set this
+     * flag.
+     */
+  enum { URI_IS_LOCAL_FILE = 512U };
+
+  /**
+     * The URIs for this protocol can be loaded only by callers with a
+     * principal that subsumes this uri. For example, privileged code and
+     * websites that are same origin as this uri.
+     */
+  enum { URI_LOADABLE_BY_SUBSUMERS = 16384U };
+
+  /**
+     * Loading channels from this protocol has side-effects that make
+     * it unsuitable for saving to a local file.
+     */
+  enum { URI_NON_PERSISTABLE = 1024U };
+
+  /**
+     * Channels using this protocol never call OnDataAvailable
+     * on the listener passed to AsyncOpen and they therefore
+     * do not return any data that we can use.
+     */
+  enum { URI_DOES_NOT_RETURN_DATA = 2048U };
+
+  /**
+     * URIs for this protocol are considered to be local resources.  This could
+     * be a local file (URI_IS_LOCAL_FILE), a UI resource (URI_IS_UI_RESOURCE),
+     * or something else that would not hit the network.
+     */
+  enum { URI_IS_LOCAL_RESOURCE = 4096U };
+
+  /**
+     * URIs for this protocol execute script when they are opened.
+     */
+  enum { URI_OPENING_EXECUTES_SCRIPT = 8192U };
+
+  /**
+     * This protocol handler can be proxied via a proxy (socks or http)
+     * (e.g., irc, smtp, http, etc.).  If the protocol supports transparent
+     * proxying, the handler should implement nsIProxiedProtocolHandler.
+     *
+     * If it supports only HTTP proxying, then it need not support
+     * nsIProxiedProtocolHandler, but should instead set the ALLOWS_PROXY_HTTP
+     * flag (see below).
+     *
+     * @see nsIProxiedProtocolHandler
+     */
+  enum { ALLOWS_PROXY = 4U };
+
+  /**
+     * This protocol handler can be proxied using a http proxy (e.g., http,
+     * ftp, etc.).  nsIIOService::newChannelFromURI will feed URIs from this
+     * protocol handler to the HTTP protocol handler instead.  This flag is
+     * ignored if ALLOWS_PROXY is not set.
+     */
+  enum { ALLOWS_PROXY_HTTP = 8U };
+
+};
+
+/* Use this macro when declaring classes that implement this interface. */
+#define NS_DECL_NSIPROTOCOLHANDLER \
+  NS_IMETHOD GetScheme(nsACString & aScheme); \
+  NS_IMETHOD GetDefaultPort(PRInt32 *aDefaultPort); \
+  NS_IMETHOD GetProtocolFlags(PRUint32 *aProtocolFlags); \
+  NS_IMETHOD NewURI(const nsACString & aSpec, const char *aOriginCharset, nsIURI *aBaseURI, nsIURI **_retval); \
+  NS_IMETHOD NewChannel(nsIURI *aURI, nsIChannel **_retval); \
+  NS_IMETHOD AllowPort(PRInt32 port, const char *scheme, PRBool *_retval); \
+
+/* Use this macro to declare functions that forward the behavior of this interface to another object. */
+#define NS_FORWARD_NSIPROTOCOLHANDLER(_to) \
+  NS_IMETHOD GetScheme(nsACString & aScheme) { return _to GetScheme(aScheme); } \
+  NS_IMETHOD GetDefaultPort(PRInt32 *aDefaultPort) { return _to GetDefaultPort(aDefaultPort); } \
+  NS_IMETHOD GetProtocolFlags(PRUint32 *aProtocolFlags) { return _to GetProtocolFlags(aProtocolFlags); } \
+  NS_IMETHOD NewURI(const nsACString & aSpec, const char *aOriginCharset, nsIURI *aBaseURI, nsIURI **_retval) { return _to NewURI(aSpec, aOriginCharset, aBaseURI, _retval); } \
+  NS_IMETHOD NewChannel(nsIURI *aURI, nsIChannel **_retval) { return _to NewChannel(aURI, _retval); } \
+  NS_IMETHOD AllowPort(PRInt32 port, const char *scheme, PRBool *_retval) { return _to AllowPort(port, scheme, _retval); } \
+
+/* Use this macro to declare functions that forward the behavior of this interface to another object in a safe way. */
+#define NS_FORWARD_SAFE_NSIPROTOCOLHANDLER(_to) \
+  NS_IMETHOD GetScheme(nsACString & aScheme) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetScheme(aScheme); } \
+  NS_IMETHOD GetDefaultPort(PRInt32 *aDefaultPort) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetDefaultPort(aDefaultPort); } \
+  NS_IMETHOD GetProtocolFlags(PRUint32 *aProtocolFlags) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetProtocolFlags(aProtocolFlags); } \
+  NS_IMETHOD NewURI(const nsACString & aSpec, const char *aOriginCharset, nsIURI *aBaseURI, nsIURI **_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->NewURI(aSpec, aOriginCharset, aBaseURI, _retval); } \
+  NS_IMETHOD NewChannel(nsIURI *aURI, nsIChannel **_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->NewChannel(aURI, _retval); } \
+  NS_IMETHOD AllowPort(PRInt32 port, const char *scheme, PRBool *_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->AllowPort(port, scheme, _retval); } \
+
+#if 0
+/* Use the code below as a template for the implementation class for this interface. */
+
+/* Header file */
+class nsProtocolHandler : public nsIProtocolHandler
+{
+public:
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIPROTOCOLHANDLER
+
+  nsProtocolHandler();
+
+private:
+  ~nsProtocolHandler();
+
+protected:
+  /* additional members */
+};
+
+/* Implementation file */
+NS_IMPL_ISUPPORTS1(nsProtocolHandler, nsIProtocolHandler)
+
+nsProtocolHandler::nsProtocolHandler()
+{
+  /* member initializers and constructor code */
+}
+
+nsProtocolHandler::~nsProtocolHandler()
+{
+  /* destructor code */
+}
+
+/* readonly attribute ACString scheme; */
+NS_IMETHODIMP nsProtocolHandler::GetScheme(nsACString & aScheme)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* readonly attribute long defaultPort; */
+NS_IMETHODIMP nsProtocolHandler::GetDefaultPort(PRInt32 *aDefaultPort)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* readonly attribute unsigned long protocolFlags; */
+NS_IMETHODIMP nsProtocolHandler::GetProtocolFlags(PRUint32 *aProtocolFlags)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* nsIURI newURI (in AUTF8String aSpec, in string aOriginCharset, in nsIURI aBaseURI); */
+NS_IMETHODIMP nsProtocolHandler::NewURI(const nsACString & aSpec, const char *aOriginCharset, nsIURI *aBaseURI, nsIURI **_retval)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* nsIChannel newChannel (in nsIURI aURI); */
+NS_IMETHODIMP nsProtocolHandler::NewChannel(nsIURI *aURI, nsIChannel **_retval)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* boolean allowPort (in long port, in string scheme); */
+NS_IMETHODIMP nsProtocolHandler::AllowPort(PRInt32 port, const char *scheme, PRBool *_retval)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* End of implementation class template. */
+#endif
+
+/**
+ * Protocol handlers are registered with XPCOM under the following CONTRACTID prefix:
+ */
+#define NS_NETWORK_PROTOCOL_CONTRACTID_PREFIX "@mozilla.org/network/protocol;1?name="
+/**
+ * For example, "@mozilla.org/network/protocol;1?name=http"
+ */
+// {0A698C44-3BFF-11d4-9649-00C0CA135B4E}
+#define NS_ISCRIPTABLEUNICODECONVERTER_CID { 0x0A698C44, 0x3BFF, 0x11d4, { 0x96, 0x49, 0x00, 0xC0, 0xCA, 0x13, 0x5B, 0x4E } }
+#define NS_ISCRIPTABLEUNICODECONVERTER_CONTRACTID "@mozilla.org/intl/scriptableunicodeconverter"
+
+/* starting interface:    nsIScriptableUnicodeConverter */
+#define NS_ISCRIPTABLEUNICODECONVERTER_IID_STR "f36ee324-5c1c-437f-ba10-2b4db7a18031"
+
+#define NS_ISCRIPTABLEUNICODECONVERTER_IID \
+  {0xf36ee324, 0x5c1c, 0x437f, \
+    { 0xba, 0x10, 0x2b, 0x4d, 0xb7, 0xa1, 0x80, 0x31 }}
+
+/**
+ * This interface is a unicode encoder for use by scripts
+ *
+ * @created         8/Jun/2000
+ * @author          Makoto Kato [m_kato@ga2.so-net.ne.jp]
+ */
+class NS_NO_VTABLE nsIScriptableUnicodeConverter : public nsISupports {
+ public: 
+
+  NS_DEFINE_STATIC_IID_ACCESSOR(NS_ISCRIPTABLEUNICODECONVERTER_IID)
+
+  /**
+   * Converts the data from Unicode to one Charset.
+   * Returns the converted string. After converting, Finish should be called
+   * and its return value appended to this return value.
+   */
+  /* ACString ConvertFromUnicode (in AString aSrc); */
+  NS_IMETHOD ConvertFromUnicode(const nsAString & aSrc, nsACString & _retval) = 0;
+
+  /**
+   * Returns the terminator string.
+   * Should be called after ConvertFromUnicode() and appended to that
+   * function's return value.
+   */
+  /* ACString Finish (); */
+  NS_IMETHOD Finish(nsACString & _retval) = 0;
+
+  /**
+   * Converts the data from one Charset to Unicode.
+   */
+  /* AString ConvertToUnicode (in ACString aSrc); */
+  NS_IMETHOD ConvertToUnicode(const nsACString & aSrc, nsAString & _retval) = 0;
+
+  /**
+   * Converts an array of bytes to a unicode string.
+   */
+  /* AString convertFromByteArray ([array, size_is (aCount), const] in octet aData, in unsigned long aCount); */
+  NS_IMETHOD ConvertFromByteArray(const PRUint8 *aData, PRUint32 aCount, nsAString & _retval) = 0;
+
+  /**
+   * Convert a unicode string to an array of bytes. Finish does not need to be
+   * called.
+   */
+  /* void convertToByteArray (in AString aString, [optional] out unsigned long aLen, [array, size_is (aLen), retval] out octet aData); */
+  NS_IMETHOD ConvertToByteArray(const nsAString & aString, PRUint32 *aLen, PRUint8 **aData) = 0;
+
+  /**
+   * Converts a unicode string to an input stream. The bytes in the stream are
+   * encoded according to the charset attribute.
+   * The returned stream will be nonblocking.
+   */
+  /* nsIInputStream convertToInputStream (in AString aString); */
+  NS_IMETHOD ConvertToInputStream(const nsAString & aString, nsIInputStream **_retval) = 0;
+
+  /**
+   * Current character set.
+   *
+   * @throw NS_ERROR_UCONV_NOCONV
+   *        The requested charset is not supported.
+   */
+  /* attribute string charset; */
+  NS_IMETHOD GetCharset(char * *aCharset) = 0;
+  NS_IMETHOD SetCharset(const char * aCharset) = 0;
+
+  /**
+   * Internal use
+   *
+   * When this attribute is set, all charsets may be accessed.
+   * When it is not set (the default), charsets with the isXSSVulnerable flag
+   *  may not be accessed
+   */
+  /* attribute boolean isInternal; */
+  NS_IMETHOD GetIsInternal(PRBool *aIsInternal) = 0;
+  NS_IMETHOD SetIsInternal(PRBool aIsInternal) = 0;
+
+};
+
+/* Use this macro when declaring classes that implement this interface. */
+#define NS_DECL_NSISCRIPTABLEUNICODECONVERTER \
+  NS_IMETHOD ConvertFromUnicode(const nsAString & aSrc, nsACString & _retval); \
+  NS_IMETHOD Finish(nsACString & _retval); \
+  NS_IMETHOD ConvertToUnicode(const nsACString & aSrc, nsAString & _retval); \
+  NS_IMETHOD ConvertFromByteArray(const PRUint8 *aData, PRUint32 aCount, nsAString & _retval); \
+  NS_IMETHOD ConvertToByteArray(const nsAString & aString, PRUint32 *aLen, PRUint8 **aData); \
+  NS_IMETHOD ConvertToInputStream(const nsAString & aString, nsIInputStream **_retval); \
+  NS_IMETHOD GetCharset(char * *aCharset); \
+  NS_IMETHOD SetCharset(const char * aCharset); \
+  NS_IMETHOD GetIsInternal(PRBool *aIsInternal); \
+  NS_IMETHOD SetIsInternal(PRBool aIsInternal); 
+
+/* Use this macro to declare functions that forward the behavior of this interface to another object. */
+#define NS_FORWARD_NSISCRIPTABLEUNICODECONVERTER(_to) \
+  NS_IMETHOD ConvertFromUnicode(const nsAString & aSrc, nsACString & _retval) { return _to ConvertFromUnicode(aSrc, _retval); } \
+  NS_IMETHOD Finish(nsACString & _retval) { return _to Finish(_retval); } \
+  NS_IMETHOD ConvertToUnicode(const nsACString & aSrc, nsAString & _retval) { return _to ConvertToUnicode(aSrc, _retval); } \
+  NS_IMETHOD ConvertFromByteArray(const PRUint8 *aData, PRUint32 aCount, nsAString & _retval) { return _to ConvertFromByteArray(aData, aCount, _retval); } \
+  NS_IMETHOD ConvertToByteArray(const nsAString & aString, PRUint32 *aLen, PRUint8 **aData) { return _to ConvertToByteArray(aString, aLen, aData); } \
+  NS_IMETHOD ConvertToInputStream(const nsAString & aString, nsIInputStream **_retval) { return _to ConvertToInputStream(aString, _retval); } \
+  NS_IMETHOD GetCharset(char * *aCharset) { return _to GetCharset(aCharset); } \
+  NS_IMETHOD SetCharset(const char * aCharset) { return _to SetCharset(aCharset); } \
+  NS_IMETHOD GetIsInternal(PRBool *aIsInternal) { return _to GetIsInternal(aIsInternal); } \
+  NS_IMETHOD SetIsInternal(PRBool aIsInternal) { return _to SetIsInternal(aIsInternal); } 
+
+/* Use this macro to declare functions that forward the behavior of this interface to another object in a safe way. */
+#define NS_FORWARD_SAFE_NSISCRIPTABLEUNICODECONVERTER(_to) \
+  NS_IMETHOD ConvertFromUnicode(const nsAString & aSrc, nsACString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->ConvertFromUnicode(aSrc, _retval); } \
+  NS_IMETHOD Finish(nsACString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Finish(_retval); } \
+  NS_IMETHOD ConvertToUnicode(const nsACString & aSrc, nsAString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->ConvertToUnicode(aSrc, _retval); } \
+  NS_IMETHOD ConvertFromByteArray(const PRUint8 *aData, PRUint32 aCount, nsAString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->ConvertFromByteArray(aData, aCount, _retval); } \
+  NS_IMETHOD ConvertToByteArray(const nsAString & aString, PRUint32 *aLen, PRUint8 **aData) { return !_to ? NS_ERROR_NULL_POINTER : _to->ConvertToByteArray(aString, aLen, aData); } \
+  NS_IMETHOD ConvertToInputStream(const nsAString & aString, nsIInputStream **_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->ConvertToInputStream(aString, _retval); } \
+  NS_IMETHOD GetCharset(char * *aCharset) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetCharset(aCharset); } \
+  NS_IMETHOD SetCharset(const char * aCharset) { return !_to ? NS_ERROR_NULL_POINTER : _to->SetCharset(aCharset); } \
+  NS_IMETHOD GetIsInternal(PRBool *aIsInternal) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetIsInternal(aIsInternal); } \
+  NS_IMETHOD SetIsInternal(PRBool aIsInternal) { return !_to ? NS_ERROR_NULL_POINTER : _to->SetIsInternal(aIsInternal); } 
+
+#if 0
+/* Use the code below as a template for the implementation class for this interface. */
+
+/* Header file */
+class nsScriptableUnicodeConverter : public nsIScriptableUnicodeConverter
+{
+public:
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSISCRIPTABLEUNICODECONVERTER
+
+  nsScriptableUnicodeConverter();
+
+private:
+  ~nsScriptableUnicodeConverter();
+
+protected:
+  /* additional members */
+};
+
+/* Implementation file */
+NS_IMPL_ISUPPORTS1(nsScriptableUnicodeConverter, nsIScriptableUnicodeConverter)
+
+nsScriptableUnicodeConverter::nsScriptableUnicodeConverter()
+{
+  /* member initializers and constructor code */
+}
+
+nsScriptableUnicodeConverter::~nsScriptableUnicodeConverter()
+{
+  /* destructor code */
+}
+
+/* ACString ConvertFromUnicode (in AString aSrc); */
+NS_IMETHODIMP nsScriptableUnicodeConverter::ConvertFromUnicode(const nsAString & aSrc, nsACString & _retval)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* ACString Finish (); */
+NS_IMETHODIMP nsScriptableUnicodeConverter::Finish(nsACString & _retval)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* AString ConvertToUnicode (in ACString aSrc); */
+NS_IMETHODIMP nsScriptableUnicodeConverter::ConvertToUnicode(const nsACString & aSrc, nsAString & _retval)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* AString convertFromByteArray ([array, size_is (aCount), const] in octet aData, in unsigned long aCount); */
+NS_IMETHODIMP nsScriptableUnicodeConverter::ConvertFromByteArray(const PRUint8 *aData, PRUint32 aCount, nsAString & _retval)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* void convertToByteArray (in AString aString, [optional] out unsigned long aLen, [array, size_is (aLen), retval] out octet aData); */
+NS_IMETHODIMP nsScriptableUnicodeConverter::ConvertToByteArray(const nsAString & aString, PRUint32 *aLen, PRUint8 **aData)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* nsIInputStream convertToInputStream (in AString aString); */
+NS_IMETHODIMP nsScriptableUnicodeConverter::ConvertToInputStream(const nsAString & aString, nsIInputStream **_retval)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* attribute string charset; */
+NS_IMETHODIMP nsScriptableUnicodeConverter::GetCharset(char * *aCharset)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+NS_IMETHODIMP nsScriptableUnicodeConverter::SetCharset(const char * aCharset)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* attribute boolean isInternal; */
+NS_IMETHODIMP nsScriptableUnicodeConverter::GetIsInternal(PRBool *aIsInternal)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+NS_IMETHODIMP nsScriptableUnicodeConverter::SetIsInternal(PRBool aIsInternal)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* End of implementation class template. */
+#endif
+
+
+/* starting interface:    nsIUUIDGenerator */
+#define NS_IUUIDGENERATOR_IID_STR "138ad1b2-c694-41cc-b201-333ce936d8b8"
+
+#define NS_IUUIDGENERATOR_IID \
+  {0x138ad1b2, 0xc694, 0x41cc, \
+    { 0xb2, 0x01, 0x33, 0x3c, 0xe9, 0x36, 0xd8, 0xb8 }}
+
+/**
+ * nsIUUIDGenerator is implemented by a service that can generate
+ * universally unique identifiers, ideally using any platform-native
+ * method for generating UUIDs.
+ */
+class NS_NO_VTABLE nsIUUIDGenerator : public nsISupports {
+ public: 
+
+  NS_DEFINE_STATIC_IID_ACCESSOR(NS_IUUIDGENERATOR_IID)
+
+  /**
+   * Obtains a new UUID using appropriate platform-specific methods to
+   * obtain a nsID that can be considered to be globally unique.
+   *
+   * @returns an nsID filled in with a new UUID.
+   *
+   * @throws NS_ERROR_FAILURE if a UUID cannot be generated (e.g. if
+   * an underlying source of randomness is not available)
+   */
+  /* nsIDPtr generateUUID (); */
+  NS_IMETHOD GenerateUUID(nsID * *_retval) = 0;
+
+  /**
+   * Obtain a new UUID like the generateUUID method, but place it in
+   * the provided nsID pointer instead of allocating a new nsID.
+   *
+   * @param id an existing nsID pointer where the UUID will be stored.
+   *
+   * @throws NS_ERROR_FAILURE if a UUID cannot be generated (e.g. if
+   * an underlying source of randomness is not available)
+   */
+  /* [noscript] void generateUUIDInPlace (in nsNonConstIDPtr id); */
+  NS_IMETHOD GenerateUUIDInPlace(nsID * id) = 0;
+
+};
+
+/* Use this macro when declaring classes that implement this interface. */
+#define NS_DECL_NSIUUIDGENERATOR \
+  NS_IMETHOD GenerateUUID(nsID * *_retval); \
+  NS_IMETHOD GenerateUUIDInPlace(nsID * id); 
+
+/* Use this macro to declare functions that forward the behavior of this interface to another object. */
+#define NS_FORWARD_NSIUUIDGENERATOR(_to) \
+  NS_IMETHOD GenerateUUID(nsID * *_retval) { return _to GenerateUUID(_retval); } \
+  NS_IMETHOD GenerateUUIDInPlace(nsID * id) { return _to GenerateUUIDInPlace(id); } 
+
+/* Use this macro to declare functions that forward the behavior of this interface to another object in a safe way. */
+#define NS_FORWARD_SAFE_NSIUUIDGENERATOR(_to) \
+  NS_IMETHOD GenerateUUID(nsID * *_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->GenerateUUID(_retval); } \
+  NS_IMETHOD GenerateUUIDInPlace(nsID * id) { return !_to ? NS_ERROR_NULL_POINTER : _to->GenerateUUIDInPlace(id); } 
+
+#if 0
+/* Use the code below as a template for the implementation class for this interface. */
+
+/* Header file */
+class nsUUIDGenerator : public nsIUUIDGenerator
+{
+public:
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIUUIDGENERATOR
+
+  nsUUIDGenerator();
+
+private:
+  ~nsUUIDGenerator();
+
+protected:
+  /* additional members */
+};
+
+/* Implementation file */
+NS_IMPL_ISUPPORTS1(nsUUIDGenerator, nsIUUIDGenerator)
+
+nsUUIDGenerator::nsUUIDGenerator()
+{
+  /* member initializers and constructor code */
+}
+
+nsUUIDGenerator::~nsUUIDGenerator()
+{
+  /* destructor code */
+}
+
+/* nsIDPtr generateUUID (); */
+NS_IMETHODIMP nsUUIDGenerator::GenerateUUID(nsID * *_retval)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* [noscript] void generateUUIDInPlace (in nsNonConstIDPtr id); */
+NS_IMETHODIMP nsUUIDGenerator::GenerateUUIDInPlace(nsID * id)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }

@@ -29,6 +29,8 @@ typedef long PRInt32;
 typedef long long PRInt64;
 typedef unsigned long long PRTime;
 
+[ref, nsid]   native nsIIDRef(nsIID);
+[ref, nsid]   native nsCIDRef(nsCID);
 
 [ref, utf8string] native AUTF8String(ignored);
 
@@ -37,10 +39,13 @@ typedef unsigned long long PRTime;
 [ref, domstring] native DOMString(ignored);
 
 [nsid] native nsIID(nsIID);
-[ref, nsid] native nsIIDRef(nsIID);
+[ref, nsid]   native nsIDRef(nsID);
+//[ref, nsid] native nsIIDRef(nsIID);
+[ptr, nsid]   native nsIDPtr(nsID);
+[ptr, nsid]   native nsIIDPtr(nsIID);
 [ptr] native nsQIResult(void);
 [nsid] native nsCID(nsCID);
-[ref, nsid] native nsCIDRef(nsCID);
+//[ref, nsid] native nsCIDRef(nsCID);
 [ptr, nsid] native nsCIDPtr(nsCID);
 
 [ptr] native voidPtr(void);
@@ -2160,6 +2165,38 @@ interface nsIInputStream : nsISupports
 
 
 
+/**
+ * nsIInputStreamChannel
+ *
+ * This interface provides methods to initialize an input stream channel.
+ * The input stream channel serves as a data pump for an input stream.
+ */
+[scriptable, uuid(274c4d7a-2447-4ceb-a6de-80db1b83f5d2)]
+interface nsIInputStreamChannel : nsISupports
+{
+    /**
+     * Sets the URI for this channel.  This must be called before the
+     * channel is opened, and it may only be called once.
+     */
+    void setURI(in nsIURI aURI);
+
+    /**
+     * Get/set the content stream
+     *
+     * This stream contains the data that will be pushed to the channel's
+     * stream listener.  If the stream is non-blocking and supports the
+     * nsIAsyncInputStream interface, then the stream will be read directly.
+     * Otherwise, the stream will be read on a background thread.
+     *
+     * This attribute must be set before the channel is opened, and it may
+     * only be set once.
+     *
+     * @throws NS_ERROR_IN_PROGRESS if the setter is called after the channel
+     * has been opened.
+     */
+    attribute nsIInputStream contentStream;
+};
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //  nsIIOService
@@ -3112,6 +3149,83 @@ interface nsITransfer : nsIWebProgressListener2
 
 
 
+/**
+ * nsIMutable defines an interface to be implemented by objects which
+ * can be made immutable.
+ */
+[scriptable, uuid(321578d0-03c1-4d95-8821-021ac612d18d)]
+interface nsIMutable : nsISupports
+{
+    /**
+     * Control whether or not this object can be modified.  If the flag is
+     * false, no modification is allowed.  Once the flag has been set to false,
+     * it cannot be reset back to true -- attempts to do so throw
+     * NS_ERROR_INVALID_ARG.
+     */
+    attribute boolean mutable;
+};
+
+
+/**
+ * nsIStandardURL defines the interface to an URL with the standard
+ * file path format common to protocols like http, ftp, and file.
+ * It supports initialization from a relative path and provides
+ * some customization on how URLs are normalized.
+ */
+[scriptable, uuid(babd6cca-ebe7-4329-967c-d6b9e33caa81)]
+interface nsIStandardURL : nsIMutable
+{
+    /**
+     * blah:foo/bar    => blah://foo/bar
+     * blah:/foo/bar   => blah:///foo/bar
+     * blah://foo/bar  => blah://foo/bar
+     * blah:///foo/bar => blah:///foo/bar
+     */
+    const unsigned long URLTYPE_STANDARD        = 1;
+
+    /**
+     * blah:foo/bar    => blah://foo/bar
+     * blah:/foo/bar   => blah://foo/bar
+     * blah://foo/bar  => blah://foo/bar
+     * blah:///foo/bar => blah://foo/bar
+     */
+    const unsigned long URLTYPE_AUTHORITY       = 2;
+
+    /**
+     * blah:foo/bar    => blah:///foo/bar
+     * blah:/foo/bar   => blah:///foo/bar
+     * blah://foo/bar  => blah://foo/bar
+     * blah:///foo/bar => blah:///foo/bar
+     */
+    const unsigned long URLTYPE_NO_AUTHORITY    = 3;
+
+    /**
+     * Initialize a standard URL.
+     *
+     * @param aUrlType       - one of the URLTYPE_ flags listed above.
+     * @param aDefaultPort   - if the port parsed from the URL string matches
+     *                         this port, then the port will be removed from the
+     *                         canonical form of the URL.
+     * @param aSpec          - URL string.
+     * @param aOriginCharset - the charset from which this URI string
+     *                         originated.  this corresponds to the charset
+     *                         that should be used when communicating this
+     *                         URI to an origin server, for example.  if
+     *                         null, then provide aBaseURI implements this
+     *                         interface, the origin charset of aBaseURI will
+     *                         be assumed, otherwise defaulting to UTF-8 (i.e.,
+     *                         no charset transformation from aSpec).
+     * @param aBaseURI       - if null, aSpec must specify an absolute URI.
+     *                         otherwise, aSpec will be resolved relative
+     *                         to aBaseURI.
+     */
+    void init(in unsigned long aUrlType,
+              in long aDefaultPort,
+              in AUTF8String aSpec,
+              in string aOriginCharset,
+              in nsIURI aBaseURI);
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 //  nsIURIContentListener
 ///////////////////////////////////////////////////////////////////////////////
@@ -3663,6 +3777,347 @@ interface nsIScriptSecurityManager : nsIXPCSecurityManager
 };
 
 
+
+/**
+ * nsIProtocolHandler
+ */
+[scriptable, uuid(15fd6940-8ea7-11d3-93ad-00104ba0fd40)]
+interface nsIProtocolHandler : nsISupports
+{
+    /**
+     * The scheme of this protocol (e.g., "file").
+     */
+    readonly attribute ACString scheme;
+
+    /** 
+     * The default port is the port that this protocol normally uses.
+     * If a port does not make sense for the protocol (e.g., "about:")
+     * then -1 will be returned.
+     */
+    readonly attribute long defaultPort;
+
+    /**
+     * Returns the protocol specific flags (see flag definitions below).  
+     */
+    readonly attribute unsigned long protocolFlags;
+
+    /**
+     * Makes a URI object that is suitable for loading by this protocol,
+     * where the URI string is given as an UTF-8 string.  The caller may
+     * provide the charset from which the URI string originated, so that
+     * the URI string can be translated back to that charset (if necessary)
+     * before communicating with, for example, the origin server of the URI
+     * string.  (Many servers do not support UTF-8 IRIs at the present time,
+     * so we must be careful about tracking the native charset of the origin
+     * server.)
+     *
+     * @param aSpec          - the URI string in UTF-8 encoding. depending
+     *                         on the protocol implementation, unicode character
+     *                         sequences may or may not be %xx escaped.
+     * @param aOriginCharset - the charset of the document from which this URI
+     *                         string originated.  this corresponds to the
+     *                         charset that should be used when communicating
+     *                         this URI to an origin server, for example.  if
+     *                         null, then UTF-8 encoding is assumed (i.e.,
+     *                         no charset transformation from aSpec).
+     * @param aBaseURI       - if null, aSpec must specify an absolute URI.
+     *                         otherwise, aSpec may be resolved relative
+     *                         to aBaseURI, depending on the protocol. 
+     *                         If the protocol has no concept of relative 
+     *                         URI aBaseURI will simply be ignored.
+     */
+    nsIURI newURI(in AUTF8String aSpec,
+                  in string aOriginCharset,
+                  in nsIURI aBaseURI);
+
+    /**
+     * Constructs a new channel from the given URI for this protocol handler. 
+     */
+    nsIChannel newChannel(in nsIURI aURI);
+
+    /**
+     * Allows a protocol to override blacklisted ports.
+     *
+     * This method will be called when there is an attempt to connect to a port 
+     * that is blacklisted.  For example, for most protocols, port 25 (Simple Mail
+     * Transfer) is banned.  When a URI containing this "known-to-do-bad-things" 
+     * port number is encountered, this function will be called to ask if the 
+     * protocol handler wants to override the ban.  
+     */
+    boolean allowPort(in long port, in string scheme);
+
+
+    /**************************************************************************
+     * Constants for the protocol flags (the first is the default mask, the
+     * others are deviations):
+     *
+     * NOTE: Implementation must ignore any flags they do not understand.
+     */
+
+    /**
+     * standard full URI with authority component and concept of relative
+     * URIs (http, ftp, ...)
+     */
+    const unsigned long URI_STD = 0;
+
+    /**
+     * no concept of relative URIs (about, javascript, finger, ...)
+     */
+    const unsigned long URI_NORELATIVE = (1<<0);
+
+    /**
+     * no authority component (file, ...)
+     */
+    const unsigned long URI_NOAUTH = (1<<1);
+
+    /**
+     * The URIs for this protocol have no inherent security context, so
+     * documents loaded via this protocol should inherit the security context
+     * from the document that loads them.
+     */
+    const unsigned long URI_INHERITS_SECURITY_CONTEXT = (1<<4);
+
+    /**
+     * "Automatic" loads that would replace the document (e.g. <meta> refresh,
+     * certain types of XLinks, possibly other loads that the application
+     * decides are not user triggered) are not allowed if the originating (NOT
+     * the target) URI has this protocol flag.  Note that the decision as to
+     * what constitutes an "automatic" load is made externally, by the caller
+     * of nsIScriptSecurityManager::CheckLoadURI.  See documentation for that
+     * method for more information.
+     *
+     * A typical protocol that might want to set this flag is a protocol that
+     * shows highly untrusted content in a viewing area that the user expects
+     * to have a lot of control over, such as an e-mail reader.
+     */
+    const unsigned long URI_FORBIDS_AUTOMATIC_DOCUMENT_REPLACEMENT = (1<<5);
+
+    /**
+     * +-------------------------------------------------------------------+
+     * |                                                                   |
+     * |  ALL PROTOCOL HANDLERS MUST SET ONE OF THE FOLLOWING FIVE FLAGS.  |
+     * |                                                                   |
+     * +-------------------------------------------------------------------+
+     *
+     * These flags are used to determine who is allowed to load URIs for this
+     * protocol.  Note that if a URI is nested, only the flags for the
+     * innermost URI matter.  See nsINestedURI.
+     *
+     * If none of these five flags are set, the URI must be treated as if it
+     * had the URI_LOADABLE_BY_ANYONE flag set, for compatibility with protocol
+     * handlers written against Gecko 1.8 or earlier.  In this case, there may
+     * be run-time warning messages indicating that a "default insecure"
+     * assumption is being made.  At some point in the futures (Mozilla 2.0,
+     * most likely), these warnings will become errors.
+     */
+
+    /**
+     * The URIs for this protocol can be loaded by anyone.  For example, any
+     * website should be allowed to trigger a load of a URI for this protocol.
+     * Web-safe protocols like "http" should set this flag.
+     */
+    const unsigned long URI_LOADABLE_BY_ANYONE = (1<<6);
+    
+    /**
+     * The URIs for this protocol are UNSAFE if loaded by untrusted (web)
+     * content and may only be loaded by privileged code (for example, code
+     * which has the system principal).  Various internal protocols should set
+     * this flag.
+     */
+    const unsigned long URI_DANGEROUS_TO_LOAD = (1<<7);
+    
+    /**
+     * The URIs for this protocol point to resources that are part of the
+     * application's user interface.  There are cases when such resources may
+     * be made accessible to untrusted content such as web pages, so this is
+     * less restrictive than URI_DANGEROUS_TO_LOAD but more restrictive than
+     * URI_LOADABLE_BY_ANYONE.  See the documentation for
+     * nsIScriptSecurityManager::CheckLoadURI.
+     */
+    const unsigned long URI_IS_UI_RESOURCE = (1<<8);
+
+    /**
+     * Loading of URIs for this protocol from other origins should only be
+     * allowed if those origins should have access to the local filesystem.
+     * It's up to the application to decide what origins should have such
+     * access.  Protocols like "file" that point to local data should set this
+     * flag.
+     */
+    const unsigned long URI_IS_LOCAL_FILE = (1<<9);
+
+    /**
+     * The URIs for this protocol can be loaded only by callers with a
+     * principal that subsumes this uri. For example, privileged code and
+     * websites that are same origin as this uri.
+     */
+    const unsigned long URI_LOADABLE_BY_SUBSUMERS = (1<<14);
+
+    /**
+     * Loading channels from this protocol has side-effects that make
+     * it unsuitable for saving to a local file.
+     */
+    const unsigned long URI_NON_PERSISTABLE = (1<<10);
+
+    /**
+     * Channels using this protocol never call OnDataAvailable
+     * on the listener passed to AsyncOpen and they therefore
+     * do not return any data that we can use.
+     */
+    const unsigned long URI_DOES_NOT_RETURN_DATA = (1<<11);
+
+    /**
+     * URIs for this protocol are considered to be local resources.  This could
+     * be a local file (URI_IS_LOCAL_FILE), a UI resource (URI_IS_UI_RESOURCE),
+     * or something else that would not hit the network.
+     */
+    const unsigned long URI_IS_LOCAL_RESOURCE = (1<<12);
+
+    /**
+     * URIs for this protocol execute script when they are opened.
+     */
+    const unsigned long URI_OPENING_EXECUTES_SCRIPT = (1<<13);
+
+    // Note that 1 << 14 is used above
+
+    /**
+     * This protocol handler can be proxied via a proxy (socks or http)
+     * (e.g., irc, smtp, http, etc.).  If the protocol supports transparent
+     * proxying, the handler should implement nsIProxiedProtocolHandler.
+     *
+     * If it supports only HTTP proxying, then it need not support
+     * nsIProxiedProtocolHandler, but should instead set the ALLOWS_PROXY_HTTP
+     * flag (see below).
+     *
+     * @see nsIProxiedProtocolHandler
+     */
+    const unsigned long ALLOWS_PROXY = (1<<2);
+
+    /**
+     * This protocol handler can be proxied using a http proxy (e.g., http,
+     * ftp, etc.).  nsIIOService::newChannelFromURI will feed URIs from this
+     * protocol handler to the HTTP protocol handler instead.  This flag is
+     * ignored if ALLOWS_PROXY is not set.
+     */
+    const unsigned long ALLOWS_PROXY_HTTP = (1<<3);
+};
+
+%{C++
+/**
+ * Protocol handlers are registered with XPCOM under the following CONTRACTID prefix:
+ */
+#define NS_NETWORK_PROTOCOL_CONTRACTID_PREFIX "@mozilla.org/network/protocol;1?name="
+/**
+ * For example, "@mozilla.org/network/protocol;1?name=http"
+ */
+%}
+
+
+%{C++
+// {0A698C44-3BFF-11d4-9649-00C0CA135B4E}
+#define NS_ISCRIPTABLEUNICODECONVERTER_CID { 0x0A698C44, 0x3BFF, 0x11d4, { 0x96, 0x49, 0x00, 0xC0, 0xCA, 0x13, 0x5B, 0x4E } }
+#define NS_ISCRIPTABLEUNICODECONVERTER_CONTRACTID "@mozilla.org/intl/scriptableunicodeconverter"
+%}
+
+/**
+ * This interface is a unicode encoder for use by scripts
+ *
+ * @created         8/Jun/2000
+ * @author          Makoto Kato [m_kato@ga2.so-net.ne.jp]
+ */
+[scriptable, uuid(f36ee324-5c1c-437f-ba10-2b4db7a18031)]
+interface nsIScriptableUnicodeConverter : nsISupports
+{
+  /**
+   * Converts the data from Unicode to one Charset.
+   * Returns the converted string. After converting, Finish should be called
+   * and its return value appended to this return value.
+   */
+  ACString ConvertFromUnicode(in AString aSrc);
+
+  /**
+   * Returns the terminator string.
+   * Should be called after ConvertFromUnicode() and appended to that
+   * function's return value.
+   */
+  ACString Finish();
+
+  /**
+   * Converts the data from one Charset to Unicode.
+   */
+  AString ConvertToUnicode(in ACString aSrc);
+
+  /**
+   * Converts an array of bytes to a unicode string.
+   */
+  AString convertFromByteArray([const,array,size_is(aCount)] in octet aData,
+                               in unsigned long aCount);
+
+  /**
+   * Convert a unicode string to an array of bytes. Finish does not need to be
+   * called.
+   */
+  void convertToByteArray(in AString aString,
+                          [optional] out unsigned long aLen,
+                          [array, size_is(aLen),retval] out octet aData);
+
+  /**
+   * Converts a unicode string to an input stream. The bytes in the stream are
+   * encoded according to the charset attribute.
+   * The returned stream will be nonblocking.
+   */
+  nsIInputStream convertToInputStream(in AString aString);
+
+  /**
+   * Current character set.
+   *
+   * @throw NS_ERROR_UCONV_NOCONV
+   *        The requested charset is not supported.
+   */
+  attribute string charset;
+
+  /**
+   * Internal use
+   *
+   * When this attribute is set, all charsets may be accessed.
+   * When it is not set (the default), charsets with the isXSSVulnerable flag
+   *  may not be accessed
+   */
+  attribute boolean isInternal;
+};
+
+
+[ptr] native nsNonConstIDPtr(nsID);
+
+/**
+ * nsIUUIDGenerator is implemented by a service that can generate
+ * universally unique identifiers, ideally using any platform-native
+ * method for generating UUIDs.
+ */
+[scriptable, uuid(138ad1b2-c694-41cc-b201-333ce936d8b8)]
+interface nsIUUIDGenerator : nsISupports
+{
+  /**
+   * Obtains a new UUID using appropriate platform-specific methods to
+   * obtain a nsID that can be considered to be globally unique.
+   *
+   * @returns an nsID filled in with a new UUID.
+   *
+   * @throws NS_ERROR_FAILURE if a UUID cannot be generated (e.g. if
+   * an underlying source of randomness is not available)
+   */
+  nsIDPtr generateUUID();
+
+  /**
+   * Obtain a new UUID like the generateUUID method, but place it in
+   * the provided nsID pointer instead of allocating a new nsID.
+   *
+   * @param id an existing nsID pointer where the UUID will be stored.
+   *
+   * @throws NS_ERROR_FAILURE if a UUID cannot be generated (e.g. if
+   * an underlying source of randomness is not available)
+   */
+  [noscript] void generateUUIDInPlace(in nsNonConstIDPtr id);
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 //  nsISSLCertErrorDialog

@@ -336,6 +336,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\protocolhandler.cpp"
+				>
+			</File>
+			<File
 				RelativePath="webcontrol.cpp"
 				>
 				<FileConfiguration
@@ -462,6 +466,10 @@
 			</File>
 			<File
 				RelativePath=".\promptservice.h"
+				>
+			</File>
+			<File
+				RelativePath=".\protocolhandler.h"
 				>
 			</File>
 			<File
