@@ -2971,7 +2971,8 @@ wxDOMDocument wxWebControl::GetDOMDocument()
 
 void wxWebControl::OpenURI(const wxString& uri,
                            unsigned int load_flags,
-                           wxWebPostData* post_data)
+                           wxWebPostData* post_data,
+                           bool grab_focus)
 {
     if (!IsOk())
         return;
@@ -3014,8 +3015,9 @@ void wxWebControl::OpenURI(const wxString& uri,
     freeUnichar(ns_uri);
                                             
     ns_smartptr<nsIWebBrowserFocus> focus = nsRequestInterface(m_ptrs->m_web_browser);
-    if (!focus)
+    if (!focus || !grab_focus) {
         return;
+    }
 
     focus->Activate();
 }
