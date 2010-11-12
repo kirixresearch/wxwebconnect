@@ -169,6 +169,13 @@ nsresult XPCOMGlueStartup(const char* xpcom_dll_path)
         HMODULE h = LoadLibraryExA(deplibs.Item(i).mbc_str(),
                                0,
                                LOAD_WITH_ALTERED_SEARCH_PATH);
+        if (!h)
+        {
+            // XXX: It is possible to get the actual error message with
+            // GetLastError() and FormatMessage(), but I'm too lazy to do it
+            // right now.
+            fprintf(stderr, "LoadLibraryExA %s failed!\n", deplibs.Item(i).mbc_str());
+        }
     }
     
     // now load the functions from xpcom.dll
@@ -180,6 +187,7 @@ nsresult XPCOMGlueStartup(const char* xpcom_dll_path)
     
     if (!f)
     {
+        fprintf(stderr, "LoadLibraryExA %s failed!\n", xpcom_dll_path);
         FreeLibrary(h);
         return NS_ERROR_FAILURE;
     }
@@ -209,13 +217,20 @@ nsresult XPCOMGlueStartup(const char* xpcom_dll_path)
     for (i = 0; i < count; ++i)
     {
         void* handle = dlopen(deplibs.Item(i).mbc_str(), RTLD_GLOBAL | RTLD_LAZY);
+        if (!handle)
+        {
+            fprintf(stderr, "dlopen %s failed! Error was:\n%s\n", deplibs.Item(i).mbc_str(), dlerror());
+        }
     }
     
     // now load the functions from libxpcom.so
     
     void* h = dlopen(xpcom_dll_path, RTLD_GLOBAL | RTLD_LAZY);
     if (!h)
+    {
+        fprintf(stderr, "dlopen %s failed! Error was:\n%s\n", xpcom_dll_path, dlerror());
         return NS_ERROR_FAILURE;
+    }
         
     GetFrozenFunctionsFunc f =
     f = (GetFrozenFunctionsFunc)dlsym(h, "NS_GetFrozenFunctions");
