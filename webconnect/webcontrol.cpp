@@ -2836,9 +2836,14 @@ bool wxWebControl::ClearCache()
     }
 }
 
+void wxWebControl::DisableFavIconFetching()
+{
+    m_disable_favicon_fetching = true;
+}
+
 void wxWebControl::FetchFavIcon(void* _uri)
 {
-    if (m_favicon_fetched)
+    if (m_favicon_fetched || m_disable_favicon_fetching)
         return;
     m_favicon_fetched = true;
 

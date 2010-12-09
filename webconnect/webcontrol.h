@@ -444,6 +444,7 @@ public:
     
     // other
     wxImage GetFavIcon() const;
+    void DisableFavIconFetching();
     wxDOMDocument GetDOMDocument();
     
 private:
@@ -472,6 +473,7 @@ private:
     
     wxImage m_favicon;
     bool m_favicon_fetched;
+    bool m_disable_favicon_fetching;
     bool m_content_loaded;
     
     DECLARE_EVENT_TABLE()
