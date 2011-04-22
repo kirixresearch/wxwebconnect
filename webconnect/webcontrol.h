@@ -441,6 +441,9 @@ public:
     void Paste();
     void SelectAll();
     void SelectNone();
+
+    // Needed to fix bugs where this steals focus and refuses to get it back.
+    void ForceKillFocus();
     
     // other
     wxImage GetFavIcon() const;

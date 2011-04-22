@@ -3807,6 +3807,17 @@ public:
 };
 
 
+void wxWebControl::ForceKillFocus()
+{
+    if (!IsOk())
+        return;
+
+    ns_smartptr<nsIWebBrowserFocus> focus = nsRequestInterface(m_ptrs->m_web_browser);
+    if (!focus)
+        return;
+    
+    focus->Deactivate();
+}
 
 void wxWebControl::OnSize(wxSizeEvent& evt)
 {
