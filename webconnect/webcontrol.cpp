@@ -988,7 +988,6 @@ NS_IMETHODIMP BrowserChrome::HandleEvent(nsIDOMEvent* evt)
         key_evt->GetShiftKey(&shiftKey);
         key_evt->GetCtrlKey(&ctrlKey);
         key_evt->GetMetaKey(&metaKey);
-        // XXX: Will this need some translating?
         key_evt->GetKeyCode(&keyCode);
 
         _wxKeyEvent.m_altDown = (bool)altKey;
@@ -3159,6 +3158,35 @@ bool wxWebControl::IsContentLoaded() const
 wxString wxWebControl::GetCurrentLoadURI()
 {
     return m_main_uri_listener->m_current_url;
+}
+
+void wxWebControl::SetHistoryMaxLength(int max_length)
+{
+    ns_smartptr<nsISHistory> session_history;
+    m_ptrs->m_web_navigation->GetSessionHistory(&session_history.p);
+    if (!session_history)
+        return;
+
+    session_history->SetMaxLength(max_length);
+}
+
+void wxWebControl::PurgeHistory()
+{
+    ns_smartptr<nsISHistory> session_history;
+    m_ptrs->m_web_navigation->GetSessionHistory(&session_history.p);
+    if (!session_history)
+        return;
+
+    nsresult res;
+    PRInt32 count;
+    res = session_history->GetCount(&count);
+    if (NS_FAILED(res))
+        return;
+
+    if (count > 0)
+    {
+        session_history->PurgeHistory(count);
+    }
 }
 
 void wxWebControl::InitPrintSettings()
