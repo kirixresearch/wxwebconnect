@@ -1,0 +1,13 @@
+
+
+wxWebConnect 1.1 - June 18th, 2010
+----------------------------------------------------
+
+    * support for xulrunner 1.9.2
+    * better profile support
+    * better printing support
+    * many bug and crash fixes
+
+wxWebConnect 1.0 - May 14th, 2009 - Initial Release
+----------------------------------------------------
+

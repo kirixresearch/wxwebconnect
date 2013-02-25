@@ -1,0 +1,47 @@
+
+
+wxWebConnect Build Instructions
+May 14th, 2009
+-------------------------------
+
+
+
+Windows
+-------
+
+
+    1) To get started, unzip this archive into, for example, \webconnect
+
+    2) Install wxWidgets into \webconnect\wxWidgets and make sure it's built
+
+    3) Open the .sln file and build testapp
+
+    4) Run testapp
+
+
+Linux
+-----
+
+
+    1) To get started, unzip this archive into, for example, /home/user/webconnect
+
+    2) Install wxWidgets into /home/user/webconnect/wxWidgets and make sure it's built
+
+    3) Get the Linux version of xulrunner 1.9 from Mozilla and replace the existing
+       xr directory with it.  The packaged XULRunner is the Win32 version, which will
+       not work on Linux.
+
+    3) go to /home/user/webconnect/webconnect and type "make"
+
+    4) go to /home/user/webconnect/testapp and type "make"
+
+    5) type "./testapp"
+
+
+
+Notes
+-----
+
+    You'll need to configure your wxWidgets directory by editing the project file
+settings on Windows and the Makefiles on Linux.
+
