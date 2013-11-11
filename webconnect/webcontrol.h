@@ -14,6 +14,7 @@
 
 
 #include "dom.h"
+#include "wx/xrc/xmlres.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -349,6 +350,7 @@ friend class WebControlRefreshTimer;
 public:
 
     static bool InitEngine(const wxString& path);
+    static void InstallXRCHandler(wxXmlResource *res = NULL);
     static bool IsEngineOk();
     static bool AddContentHandler(wxWebContentHandler* handler, bool take_ownership = false);
     static void AddPluginPath(const wxString& path);
@@ -374,10 +376,18 @@ public:
                  
 public:
 
+    wxWebControl() : wxControl(), m_ok(false), m_disable_favicon_fetching(false) {};
     wxWebControl(wxWindow* parent,
                  wxWindowID id = wxID_ANY,
                  const wxPoint& pos = wxDefaultPosition,
-                 const wxSize& size = wxDefaultSize);
+                 const wxSize& size = wxDefaultSize) {
+		Create(parent, id, pos, size);
+	}
+
+    bool Create(wxWindow* parent,
+           wxWindowID id = wxID_ANY,
+           const wxPoint& pos = wxDefaultPosition,
+           const wxSize& size = wxDefaultSize);
     ~wxWebControl();
     
     bool IsOk() const;
