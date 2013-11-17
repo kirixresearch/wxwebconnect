@@ -267,31 +267,6 @@ interface nsILocalFile : nsIFile
 
 
 ///////////////////////////////////////////////////////////////////////////////
-//  nsIAppShell
-///////////////////////////////////////////////////////////////////////////////
-
-
-interface nsIEventQueue;
-native int(int);
-
-
-[uuid(a0757c31-eeac-11d1-9ec1-00aa002fb821)]
-interface nsIAppShell : nsISupports
-{
-    void Create(inout int argc, inout string argv);
-    void Run();
-    void Spinup();
-    void Spindown();
-    void ListenToEventQueue(in nsIEventQueue queue, in boolean listen);
-    void GetNativeEvent(in PRBoolRef realEvent, in voidPtrRef event);
-    void DispatchNativeEvent(in boolean realEvent, in voidPtr event);
-    void Exit();
-};
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////
 //  nsIBadCertListener
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -467,15 +442,52 @@ interface nsIBaseWindow : nsISupports
 typedef long nsCacheStoragePolicy;
 interface nsICacheSession;
 interface nsICacheVisitor;
+interface nsIEventTarget;
 
-[scriptable, uuid(de114eb4-29fc-4959-b2f7-2d03eb9bc771)]
+[scriptable, uuid(14dbe1e9-f3bc-45af-92f4-2c574fcd4e39)]
 interface nsICacheService : nsISupports
 {
-    nsICacheSession createSession(in string client_id,
-                                  in nsCacheStoragePolicy storage_policy,
-                                  in boolean stream_based);
+    /**
+     * Create a cache session
+     *
+     * A cache session represents a client's access into the cache.  The cache
+     * session is not "owned" by the cache service.  Hence, it is possible to
+     * create duplicate cache sessions.  Entries created by a cache session
+     * are invisible to other cache sessions, unless the cache sessions are
+     * equivalent.
+     *
+     * @param clientID - Specifies the name of the client using the cache.
+     * @param storagePolicy - Limits the storage policy for all entries
+     *   accessed via the returned session.  As a result, devices excluded
+     *   by the storage policy will not be searched when opening entries
+     *   from the returned session.
+     * @param streamBased - Indicates whether or not the data being cached
+     *   can be represented as a stream.  The storagePolicy must be 
+     *   consistent with the value of this field.  For example, a non-stream-
+     *   based cache entry can only have a storage policy of STORE_IN_MEMORY.
+     * @return new cache session.
+     */
+    nsICacheSession createSession(in string                 clientID,
+                                  in nsCacheStoragePolicy   storagePolicy,
+                                  in boolean                streamBased);
+
+    /**
+     * Visit entries stored in the cache.  Used to implement about:cache.
+     */
     void visitEntries(in nsICacheVisitor visitor);
-    void evictEntries(in nsCacheStoragePolicy storage_policy);
+
+    /**
+     * Evicts all entries in all devices implied by the storage policy.
+     *
+     * @note This function may evict some items but will throw if it fails to evict
+     *       everything.
+     */
+    void evictEntries(in nsCacheStoragePolicy  storagePolicy);
+
+    /**
+     * Event target which is used for I/O operations
+     */
+    readonly attribute nsIEventTarget cacheIOTarget;
 };
 
 
@@ -539,28 +551,186 @@ interface nsIRequest : nsISupports
 ///////////////////////////////////////////////////////////////////////////////
 
 
-[scriptable, uuid(07a22cc0-0ce5-11d3-9331-00104ba0fd40)]
+[scriptable, uuid(395fe045-7d18-4adb-a3fd-af98c8a1af11)]
 interface nsIURI : nsISupports
 {
+    /************************************************************************
+     * The URI is broken down into the following principal components:
+     */
+
+    /**
+     * Returns a string representation of the URI. Setting the spec causes
+     * the new spec to be parsed per the rules for the scheme the URI
+     * currently has.  In particular, setting the spec to a URI string with a
+     * different scheme will generally produce incorrect results; no one
+     * outside of a protocol handler implementation should be doing that.  If
+     * the URI stores information from the nsIIOService.newURI call used to
+     * create it other than just the parsed string, then behavior of this
+     * information on setting the spec attribute is undefined.
+     *
+     * Some characters may be escaped.
+     */
     attribute AUTF8String spec;
+
+    /**
+     * The prePath (eg. scheme://user:password@host:port) returns the string
+     * before the path.  This is useful for authentication or managing sessions.
+     *
+     * Some characters may be escaped.
+     */
     readonly attribute AUTF8String prePath;
+
+    /**
+     * The Scheme is the protocol to which this URI refers.  The scheme is
+     * restricted to the US-ASCII charset per RFC2396.  Setting this is
+     * highly discouraged outside of a protocol handler implementation, since
+     * that will generally lead to incorrect results.
+     */
     attribute ACString scheme;
+
+    /**
+     * The username:password (or username only if value doesn't contain a ':')
+     *
+     * Some characters may be escaped.
+     */
     attribute AUTF8String userPass;
+
+    /**
+     * The optional username and password, assuming the preHost consists of
+     * username:password.
+     *
+     * Some characters may be escaped.
+     */
     attribute AUTF8String username;
     attribute AUTF8String password;
+
+    /**
+     * The host:port (or simply the host, if port == -1).
+     *
+     * Characters are NOT escaped.
+     */
     attribute AUTF8String hostPort;
+
+    /**
+     * The host is the internet domain name to which this URI refers.  It could
+     * be an IPv4 (or IPv6) address literal.  If supported, it could be a
+     * non-ASCII internationalized domain name.
+     *
+     * Characters are NOT escaped.
+     */
     attribute AUTF8String host;
+
+    /**
+     * A port value of -1 corresponds to the protocol's default port (eg. -1
+     * implies port 80 for http URIs).
+     */
     attribute long port;
+
+    /**
+     * The path, typically including at least a leading '/' (but may also be
+     * empty, depending on the protocol).
+     *
+     * Some characters may be escaped.
+     */
     attribute AUTF8String path;
 
+
+    /************************************************************************
+     * An URI supports the following methods:
+     */
+
+    /**
+     * URI equivalence test (not a strict string comparison).
+     *
+     * eg. http://foo.com:80/ == http://foo.com/
+     */
     boolean equals(in nsIURI other);
+
+    /**
+     * An optimization to do scheme checks without requiring the users of nsIURI
+     * to GetScheme, thereby saving extra allocating and freeing. Returns true if
+     * the schemes match (case ignored).
+     */
     boolean schemeIs(in string scheme);
+
+    /**
+     * Clones the current URI.
+     */
     nsIURI clone();
-    AUTF8String resolve(in AUTF8String relative_path);
-    
+
+    /**
+     * This method resolves a relative string into an absolute URI string,
+     * using this URI as the base. 
+     *
+     * NOTE: some implementations may have no concept of a relative URI.
+     */
+    AUTF8String resolve(in AUTF8String relativePath);
+
+
+    /************************************************************************
+     * Additional attributes:
+     */
+
+    /**
+     * The URI spec with an ASCII compatible encoding.  Host portion follows
+     * the IDNA draft spec.  Other parts are URL-escaped per the rules of
+     * RFC2396.  The result is strictly ASCII.
+     */
     readonly attribute ACString asciiSpec;
+
+    /**
+     * The URI host with an ASCII compatible encoding.  Follows the IDNA
+     * draft spec for converting internationalized domain names (UTF-8) to
+     * ASCII for compatibility with existing internet infrasture.
+     */
     readonly attribute ACString asciiHost;
+
+    /**
+     * The charset of the document from which this URI originated.  An empty
+     * value implies UTF-8.
+     *
+     * If this value is something other than UTF-8 then the URI components
+     * (e.g., spec, prePath, username, etc.) will all be fully URL-escaped.
+     * Otherwise, the URI components may contain unescaped multibyte UTF-8
+     * characters.
+     */
     readonly attribute ACString originCharset;
+
+    /************************************************************************
+     * Additional attribute & methods added for .ref support:
+     */
+
+    /**
+     * Returns the reference portion (the part after the "#") of the URI.
+     * If there isn't one, an empty string is returned.
+     *
+     * Some characters may be escaped.
+     */
+    attribute AUTF8String ref;
+
+    /**
+     * URI equivalence test (not a strict string comparison), ignoring
+     * the value of the .ref member.
+     *
+     * eg. http://foo.com/# == http://foo.com/
+     *     http://foo.com/#aaa == http://foo.com/#bbb
+     */
+    boolean equalsExceptRef(in nsIURI other);
+
+    /**
+     * Clones the current URI, clearing the 'ref' attribute in the clone.
+     */
+    nsIURI cloneIgnoringRef();
+
+    /**
+     * returns a string for the current URI with the ref element cleared.
+     */
+   readonly attribute AUTF8String specIgnoringRef;
+
+    /**
+     * Returns if there is a reference portion (the part after the "#") of the URI.
+     */
+   readonly attribute boolean hasRef;
 };
 
 
@@ -648,28 +818,83 @@ interface nsIClipboardCommands : nsISupports
 ///////////////////////////////////////////////////////////////////////////////
 
 
-[scriptable, uuid(a88e5a60-205a-4bb1-94e1-2628daf51eae)]
+[scriptable, uuid(1d940426-5fe5-42c3-84ae-a300f2d9ebd5)]
 interface nsIComponentManager : nsISupports
-{
-    void getClassObject(in nsCIDRef class_id,
-                        in nsIIDRef iid,
-                        [iid_is(iid),retval] out nsQIResult result);
-                        
-    void getClassObjectByContractID(
-                        in string contract_id,
-                        in nsIIDRef iid,
-                        [iid_is(iid),retval] out nsQIResult result);
-                                  
-    void createInstance(in nsCIDRef class_id,
-                        in nsISupports delegate,
-                        in nsIIDRef iid,
-                        [iid_is(iid),retval] out nsQIResult result);
-                        
-    void createInstanceByContractID(
-                        in string contract_id,
-                        in nsISupports delegate,
-                        in nsIIDRef iid,
-                        [iid_is(iid),retval] out nsQIResult result);
+{    
+    /**
+     * getClassObject
+     *
+     * Returns the factory object that can be used to create instances of
+     * CID aClass
+     *
+     * @param aClass The classid of the factory that is being requested
+     */
+    void getClassObject(in nsCIDRef aClass,
+                        in nsIIDRef aIID,
+                        [iid_is(aIID),retval] out nsQIResult result);
+
+    /**
+     * getClassObjectByContractID
+     *
+     * Returns the factory object that can be used to create instances of
+     * CID aClass
+     *
+     * @param aClass The classid of the factory that is being requested
+     */
+    void getClassObjectByContractID(in string aContractID,
+                                    in nsIIDRef aIID,
+                                    [iid_is(aIID),retval] out nsQIResult result);
+
+
+   /**
+     * createInstance
+     *
+     * Create an instance of the CID aClass and return the interface aIID.
+     *
+     * @param aClass : ClassID of object instance requested
+     * @param aDelegate : Used for aggregation
+     * @param aIID : IID of interface requested
+     */
+    void createInstance(in nsCIDRef aClass, 
+                        in nsISupports aDelegate,
+                        in nsIIDRef aIID, 
+                        [iid_is(aIID),retval] out nsQIResult result);
+
+    /**
+     * createInstanceByContractID
+     *
+     * Create an instance of the CID that implements aContractID and return the
+     * interface aIID. 
+     *
+     * @param aContractID : aContractID of object instance requested
+     * @param aDelegate : Used for aggregation
+     * @param aIID : IID of interface requested
+     */
+    void createInstanceByContractID(in string aContractID,
+                                    in nsISupports aDelegate,
+                                    in nsIIDRef aIID, 
+                                    [iid_is(aIID),retval] out nsQIResult result);
+
+    /**
+     * addBootstrappedManifestLocation
+     *
+     * Adds a bootstrapped manifest location on runtime.
+     *
+     * @param aLocation : A directory where chrome.manifest resides,
+     *                    or an XPI with it on the root.
+     */
+    void addBootstrappedManifestLocation(in nsILocalFile aLocation);
+
+    /**
+     * removeBootstrappedManifestLocation
+     *
+     * Removes a bootstrapped manifest location on runtime.
+     *
+     * @param aLocation : A directory where chrome.manifest resides,
+     *                    or an XPI with it on the root.
+     */
+    void removeBootstrappedManifestLocation(in nsILocalFile aLocation);
+
 };
 
 
@@ -3293,21 +3518,53 @@ interface nsIWebProgressListener2 : nsIWebProgressListener
 ///////////////////////////////////////////////////////////////////////////////
 
 
+interface nsIURI;
+interface nsICancelable;
 interface nsIMIMEInfo;
 interface nsILocalFile;
-interface nsICancelable;
 
+[scriptable, uuid(3a982955-dc44-422e-8734-8462bf8d2121)]
+interface nsITransfer : nsIWebProgressListener2 {
 
-[scriptable, uuid(23c51569-e9a1-4a92-adeb-3723db82ef7c)]
-interface nsITransfer : nsIWebProgressListener2
-{
-    void init(in nsIURI source,
-              in nsIURI target,
-              in AString display_name,
-              in nsIMIMEInfo mime_info,
-              in PRTime start_time,
-              in nsILocalFile temp_file,
-              in nsICancelable cancelable);
+    /**
+     * Initializes the transfer with certain properties.  This function must
+     * be called prior to accessing any properties on this interface.
+     *
+     * @param aSource The source URI of the transfer. Must not be null.
+     *
+     * @param aTarget The target URI of the transfer. Must not be null.
+     *
+     * @param aDisplayName The user-readable description of the transfer.
+     *                     Can be empty.
+     *
+     * @param aMIMEInfo The MIME info associated with the target,
+     *                  including MIME type and helper app when appropriate.
+     *                  This parameter is optional.
+     *
+     * @param startTime Time when the download started (ie, when the first
+     *                  response from the server was received)
+     *                  XXX presumably wbp and exthandler do this differently
+     *
+     * @param aTempFile The location of a temporary file; i.e. a file in which
+     *                  the received data will be stored, but which is not
+     *                  equal to the target file. (will be moved to the real
+     *                  target by the caller, when the download is finished)
+     *                  May be null.
+     *
+     * @param aCancelable An object that can be used to abort the download.
+     *                    Must not be null.
+     *                    Implementations are expected to hold a strong
+     *                    reference to this object until the download is
+     *                    finished, at which point they should release the
+     *                    reference.
+     */
+    void init(in nsIURI aSource,
+              in nsIURI aTarget,
+              in AString aDisplayName,
+              in nsIMIMEInfo aMIMEInfo,
+              in PRTime startTime,
+              in nsILocalFile aTempFile,
+              in nsICancelable aCancelable);
 };
 
 
@@ -3978,7 +4235,7 @@ interface nsIXPCSecurityManager : nsISupports
 //  nsIPrincipal
 ///////////////////////////////////////////////////////////////////////////////
 
-[uuid(0575ea96-4561-4dc6-a818-3c4c97c2430d)]
+[scriptable, uuid(B406A2DB-E547-4C95-B8E2-AD09ECB54CE0)]
 interface nsIPrincipal : nsISupports //nsISerializable
 {
     // TODO: fill out (if necessary)
@@ -3991,98 +4248,303 @@ interface nsIPrincipal : nsISupports //nsISerializable
 //  nsIScriptSecurityManager
 ///////////////////////////////////////////////////////////////////////////////
 
-[uuid(f4d74511-2b2d-4a14-a3e4-a392ac5ac3ff)]
+/* XXX: I'm not sure that these are the right definitions. */
+[ptr] native jsid(ptrdiff_t);
+[ptr] native JSStackFramePtr(void *);
+
+[scriptable, uuid(50eda256-4dd2-4c7c-baed-96983910af9f)]
 interface nsIScriptSecurityManager : nsIXPCSecurityManager
 {
-    void checkPropertyAccess(
-                      in JSContextPtr js_context,
-                      in JSObjectPtr js_object,
-                      in string class_name,
-                      in JSVal property,
-                      in PRUint32 action);
+    ///////////////// Security Checks //////////////////
+    /**
+     * Checks whether the running script is allowed to access aProperty.
+     */
+    [noscript] void checkPropertyAccess(in JSContextPtr aJSContext,
+                                        in JSObjectPtr aJSObject,
+                                        in string aClassName,
+                                        in jsid aProperty,
+                                        in PRUint32 aAction);
 
-    void checkConnect(in JSContextPtr js_context,
-                      in nsIURI target_uri,
-                      in string class_name,
-                      in string property);
+    /**
+     * Check that the script currently running in context "cx" can load "uri".
+     *
+     * Will return error code NS_ERROR_DOM_BAD_URI if the load request
+     * should be denied.
+     *
+     * @param cx the JSContext of the script causing the load
+     * @param uri the URI that is being loaded
+     */
+    [noscript] void checkLoadURIFromScript(in JSContextPtr cx, in nsIURI uri);
 
-    void checkLoadURIFromScript(
-                      in JSContextPtr cx,
-                      in nsIURI uri);
+    /**
+     * Default CheckLoadURI permissions
+     */
+    // Default permissions
+    const unsigned long STANDARD = 0;
 
-    void checkLoadURIWithPrincipal(
-                      in nsIPrincipal principal,
-                      in nsIURI uri, 
-                      in unsigned long flags);
+    // Indicate that the load is a load of a new document that is not
+    // user-triggered.  Here "user-triggered" could be broadly interpreted --
+    // for example, scripted sets of window.location.href might be treated as
+    // "user-triggered" in some circumstances.  A typical example of a load
+    // that is not user-triggered is a <meta> refresh load.  If this flag is
+    // set, the load will be denied if the originating principal's URI has the
+    // nsIProtocolHandler::URI_FORBIDS_AUTOMATIC_DOCUMENT_REPLACEMENT flag set.
+    const unsigned long LOAD_IS_AUTOMATIC_DOCUMENT_REPLACEMENT = 1 << 0;
 
-    void checkLoadURI(in nsIURI from,
-                      in nsIURI uri,
-                      in unsigned long flags);
+    // Allow the loading of chrome URLs by non-chrome URLs.  Use with great
+    // care!  This will actually allow the loading of any URI which has the
+    // nsIProtocolHandler::URI_IS_UI_RESOURCE protocol handler flag set.  Ths
+    // probably means at least chrome: and resource:.
+    const unsigned long ALLOW_CHROME = 1 << 1;
 
-    void checkLoadURIStr(
-                      in AUTF8String from,
-                      in AUTF8String uri,
-                      in unsigned long flags);
+    // Don't allow URLs which would inherit the caller's principal (such as
+    // javascript: or data:) to load.  See
+    // nsIProtocolHandler::URI_INHERITS_SECURITY_CONTEXT.
+    const unsigned long DISALLOW_INHERIT_PRINCIPAL = 1 << 2;
 
-    void checkFunctionAccess(
-                      in JSContextPtr cx,
-                      in voidPtr fun_obj,
-                      in voidPtr target_obj);
+    // Alias for DISALLOW_INHERIT_PRINCIPAL for backwards compat with
+    // JS-implemented extensions.
+    const unsigned long DISALLOW_SCRIPT_OR_DATA = DISALLOW_INHERIT_PRINCIPAL;
 
-    boolean canExecuteScripts(
-                      in JSContextPtr cx,
-                      in nsIPrincipal principal);
+    // Don't allow javascript: URLs to load
+    //   WARNING: Support for this value was added in Mozilla 1.7.8 and
+    //   Firefox 1.0.4.  Use in prior versions WILL BE IGNORED.
+    // When using this, make sure that you actually want DISALLOW_SCRIPT, not
+    // DISALLOW_INHERIT_PRINCIPAL
+    const unsigned long DISALLOW_SCRIPT = 1 << 3;
 
-    nsIPrincipal getSubjectPrincipal();
+    /**
+     * Check that content with principal aPrincipal can load "uri".
+     *
+     * Will return error code NS_ERROR_DOM_BAD_URI if the load request
+     * should be denied.
+     *
+     * @param aPrincipal the principal identifying the actor causing the load
+     * @param uri the URI that is being loaded
+     * @param flags the permission set, see above
+     */
+    void checkLoadURIWithPrincipal(in nsIPrincipal aPrincipal,
+                                   in nsIURI uri,
+                                   in unsigned long flags);
 
+    /**
+     * Check that content from "from" can load "uri".
+     *
+     * Will return error code NS_ERROR_DOM_BAD_URI if the load request
+     * should be denied.
+     *
+     * @param from the URI causing the load
+     * @param uri the URI that is being loaded
+     * @param flags the permission set, see above
+     *
+     * @deprecated Use checkLoadURIWithPrincipal instead of this function.
+     */
+    [deprecated] void checkLoadURI(in nsIURI from, in nsIURI uri,
+                                   in unsigned long flags);
+
+    /**
+     * Similar to checkLoadURIWithPrincipal but there are two differences:
+     *
+     * 1) The URI is a string, not a URI object.
+     * 2) This function assumes that the URI may still be subject to fixup (and
+     * hence will check whether fixed-up versions of the URI are allowed to
+     * load as well); if any of the versions of this URI is not allowed, this
+     * function will return error code NS_ERROR_DOM_BAD_URI.
+     */
+    void checkLoadURIStrWithPrincipal(in nsIPrincipal aPrincipal,
+                                      in AUTF8String uri,
+                                      in unsigned long flags);
+
+    /**
+     * Same as CheckLoadURI but takes string arguments for ease of use
+     * by scripts
+     *
+     * @deprecated Use checkLoadURIStrWithPrincipal instead of this function.
+     */
+    [deprecated] void checkLoadURIStr(in AUTF8String from, in AUTF8String uri,
+                                      in unsigned long flags);
+
+    /**
+     * Check that the function 'funObj' is allowed to run on 'targetObj'
+     *
+     * Will return error code NS_ERROR_DOM_SECURITY_ERR if the function
+     * should not run
+     *
+     * @param cx The current active JavaScript context.
+     * @param funObj The function trying to run..
+     * @param targetObj The object the function will run on.
+     */
+    [noscript] void checkFunctionAccess(in JSContextPtr cx, in voidPtr funObj,
+                                        in voidPtr targetObj);
+
+    /**
+     * Return true if content from the given principal is allowed to
+     * execute scripts.
+     */
+    [noscript] boolean canExecuteScripts(in JSContextPtr cx,
+                                         in nsIPrincipal principal);
+
+    ///////////////// Principals ///////////////////////
+    /**
+     * Return the principal of the innermost frame of the currently
+     * executing script. Will return null if there is no script
+     * currently executing.
+     */
+    [noscript] nsIPrincipal getSubjectPrincipal();
+
+    /**
+     * Return the all-powerful system principal.
+     */
     nsIPrincipal getSystemPrincipal();
 
-    nsIPrincipal getCertificatePrincipal(
-                      in AUTF8String cert_fingerprint,
-                      in AUTF8String subject_name,
-                      in AUTF8String pretty_name,
-                      in nsISupports cert,
-                      in nsIURI uri);
-            
-    nsIPrincipal getCodebasePrincipal(in nsIURI uri);
+    /**
+     * Return a principal with the specified certificate fingerprint, subject
+     * name (the full name or concatenated set of names of the entity
+     * represented by the certificate), pretty name, certificate, and
+     * codebase URI.  The certificate fingerprint and subject name MUST be
+     * nonempty; otherwise an error will be thrown.  Similarly, aCert must
+     * not be null.
+     */
+    [noscript] nsIPrincipal
+         getCertificatePrincipal(in AUTF8String aCertFingerprint,
+                                 in AUTF8String aSubjectName,
+                                 in AUTF8String aPrettyName,
+                                 in nsISupports aCert,
+                                 in nsIURI aURI);
 
-    short requestCapability(
-                      in nsIPrincipal principal,
-                      in string capability);
+    /**
+     * Return a principal that has the same origin as aURI.
+     */
+    nsIPrincipal getCodebasePrincipal(in nsIURI aURI);
 
+    ///////////////// Capabilities API /////////////////////
+    /**
+     * Request that 'capability' can be enabled by scripts or applets
+     * running with 'principal'. Will prompt user if
+     * necessary. Returns nsIPrincipal::ENABLE_GRANTED or
+     * nsIPrincipal::ENABLE_DENIED based on user's choice.
+     */
+    [noscript] short requestCapability(in nsIPrincipal principal,
+                                       in string capability);
+
+    /**
+     * Return true if the currently executing script has 'capability' enabled.
+     */
     boolean isCapabilityEnabled(in string capability);
+
+    /**
+     * Enable 'capability' in the innermost frame of the currently executing
+     * script.
+     */
     void enableCapability(in string capability);
+
+    /**
+     * Remove 'capability' from the innermost frame of the currently
+     * executing script. Any setting of 'capability' from enclosing
+     * frames thus comes into effect.
+     */
     void revertCapability(in string capability);
+
+    /**
+     * Disable 'capability' in the innermost frame of the currently executing
+     * script.
+     */
     void disableCapability(in string capability);
 
-    void setCanEnableCapability(
-                      in AUTF8String certificate_id,
-                      in string capability,
-                      in short can_enable);
+    //////////////// Master Certificate Functions ////////////////////
+    /**
+     * Allow 'certificateID' to enable 'capability.' Can only be performed
+     * by code signed by the system certificate.
+     */
+    // XXXbz Capabilities can't have non-ascii chars?
+    // XXXbz ideally we'd pass a subjectName here too, and the nsISupports
+    // cert we're enabling for...
+    void setCanEnableCapability(in AUTF8String certificateFingerprint,
+                                in string capability,
+                                in short canEnable);
 
-    nsIPrincipal getObjectPrincipal(
-                      in JSContextPtr cx,
-                      in JSObjectPtr obj);
+    ///////////////////////
+    /**
+     * Return the principal of the specified object in the specified context.
+     */
+    [noscript] nsIPrincipal getObjectPrincipal(in JSContextPtr cx,
+                                               in JSObjectPtr obj);
 
-    boolean subjectPrincipalIsSystem();
+    /**
+     * Returns true if the principal of the currently running script is the
+     * system principal, false otherwise.
+     */
+    [noscript] boolean subjectPrincipalIsSystem();
 
-    void checkSameOrigin(
-                      in JSContextPtr js_context,
-                      in nsIURI target_uri);
+    /**
+     * Returns OK if aJSContext and target have the same "origin"
+     * (scheme, host, and port).
+     */
+    [noscript] void checkSameOrigin(in JSContextPtr aJSContext,
+                                    in nsIURI aTargetURI);
 
-    void checkSameOriginURI(
-                      in nsIURI source_uri,
-                      in nsIURI target_uri);
+    /**
+     * Returns OK if aSourceURI and target have the same "origin"
+     * (scheme, host, and port).
+     * ReportError flag suppresses error reports for functions that
+     * don't need reporting.
+     */
+    void checkSameOriginURI(in nsIURI aSourceURI,
+                            in nsIURI aTargetURI,
+                            in boolean reportError);
 
-    void checkSameOriginPrincipal(
-                      in nsIPrincipal source_principal,
-                      in nsIPrincipal target_principal);
+    /**
+     * Returns the principal of the global object of the given context, or null
+     * if no global or no principal.
+     */
+    [noscript] nsIPrincipal getPrincipalFromContext(in JSContextPtr cx);
 
-    nsIPrincipal getPrincipalFromContext(in JSContextPtr cx);
+    /**
+     * Get the principal for the given channel.  This will typically be the
+     * channel owner if there is one, and the codebase principal for the
+     * channel's URI otherwise.  aChannel must not be null.
+     */
+    nsIPrincipal getChannelPrincipal(in nsIChannel aChannel);
 
-    boolean securityCompareURIs(
-                      in nsIURI subject_uri,
-                      in nsIURI object_uri);
+    /**
+     * Check whether a given principal is a system principal.  This allows us
+     * to avoid handing back the system principal to script while allowing
+     * script to check whether a given principal is system.
+     */
+    boolean isSystemPrincipal(in nsIPrincipal aPrincipal);
+
+    /**
+     * Same as getSubjectPrincipal(), only faster. cx must *never* be
+     * passed null, and it must be the context on the top of the
+     * context stack. Does *not* reference count the returned
+     * principal.
+     */
+    [noscript,notxpcom] nsIPrincipal getCxSubjectPrincipal(in JSContextPtr cx);
+    [noscript,notxpcom] nsIPrincipal getCxSubjectPrincipalAndFrame(in JSContextPtr cx,
+                                                                   out JSStackFramePtr fp);
+
+    /**
+     * If no scripted code is running "above" (or called from) fp, then
+     * instead of looking at cx->globalObject, we will return |principal|.
+     * This function only affects |cx|. If someone pushes another context onto
+     * the context stack, then it supersedes this call.
+     * NOTE: If |fp| is non-null popContextPrincipal must be called before fp
+     * has finished executing.
+     *
+     * @param cx The context to clamp.
+     * @param fp The frame pointer to clamp at. May be 'null'.
+     * @param principal The principal to clamp to.
+     */
+    [noscript] void pushContextPrincipal(in JSContextPtr cx,
+                                         in JSStackFramePtr fp,
+                                         in nsIPrincipal principal);
+
+    /**
+     * Removes a clamp set by pushContextPrincipal from cx. This must be
+     * called in a stack-like fashion (e.g., given two contexts |a| and |b|,
+     * it is not legal to do: push(a) push(b) pop(a)).
+     */
+    [noscript] void popContextPrincipal(in JSContextPtr cx);
 };
 
 
@@ -5009,4 +5471,27 @@ interface nsIWebBrowserStream : nsISupports
    *        This method was called without a preceding openStream.
    */
   void closeStream();
+};
+
+
+[scriptable, uuid(ea604e90-40ba-11d5-90bb-0010a4e73d9a)]
+interface nsIProgrammingLanguage : nsISupports
+{
+    /**
+     * Identifiers for programming languages.
+     */
+    const PRUint32 UNKNOWN     = 0;
+    const PRUint32 CPLUSPLUS   = 1;
+    const PRUint32 JAVASCRIPT  = 2;
+    const PRUint32 PYTHON      = 3;
+    const PRUint32 PERL        = 4;
+    const PRUint32 JAVA        = 5;
+    const PRUint32 ZX81_BASIC  = 6;  // it could happen :)
+    const PRUint32 JAVASCRIPT2 = 7;
+    const PRUint32 RUBY =        8;
+    const PRUint32 PHP =         9;
+    const PRUint32 TCL =         10;
+    // This list can grow indefinitely. Just don't ever change an existing item.
+    const PRUint32 MAX         = 10; // keep this as the largest index.
+    
 };

@@ -1320,163 +1320,6 @@ NS_IMETHODIMP nsLocalFile::SetRelativeDescriptor(nsILocalFile *from_file, const 
 /* End of implementation class template. */
 #endif
 
-class nsIEventQueue; /* forward declaration */
-
-
-/* starting interface:    nsIAppShell */
-#define NS_IAPPSHELL_IID_STR "a0757c31-eeac-11d1-9ec1-00aa002fb821"
-
-#define NS_IAPPSHELL_IID \
-  {0xa0757c31, 0xeeac, 0x11d1, \
-    { 0x9e, 0xc1, 0x00, 0xaa, 0x00, 0x2f, 0xb8, 0x21 }}
-
-class NS_NO_VTABLE nsIAppShell : public nsISupports {
- public: 
-
-  NS_DEFINE_STATIC_IID_ACCESSOR(NS_IAPPSHELL_IID)
-
-  /* void Create (inout int argc, inout string argv); */
-  NS_IMETHOD Create(int *argc, char **argv) = 0;
-
-  /* void Run (); */
-  NS_IMETHOD Run(void) = 0;
-
-  /* void Spinup (); */
-  NS_IMETHOD Spinup(void) = 0;
-
-  /* void Spindown (); */
-  NS_IMETHOD Spindown(void) = 0;
-
-  /* void ListenToEventQueue (in nsIEventQueue queue, in boolean listen); */
-  NS_IMETHOD ListenToEventQueue(nsIEventQueue *queue, PRBool listen) = 0;
-
-  /* void GetNativeEvent (in PRBoolRef realEvent, in voidPtrRef event); */
-  NS_IMETHOD GetNativeEvent(PRBool & realEvent, void* & event) = 0;
-
-  /* void DispatchNativeEvent (in boolean realEvent, in voidPtr event); */
-  NS_IMETHOD DispatchNativeEvent(PRBool realEvent, void * event) = 0;
-
-  /* void Exit (); */
-  NS_IMETHOD Exit(void) = 0;
-
-};
-
-/* Use this macro when declaring classes that implement this interface. */
-#define NS_DECL_NSIAPPSHELL \
-  NS_IMETHOD Create(int *argc, char **argv); \
-  NS_IMETHOD Run(void); \
-  NS_IMETHOD Spinup(void); \
-  NS_IMETHOD Spindown(void); \
-  NS_IMETHOD ListenToEventQueue(nsIEventQueue *queue, PRBool listen); \
-  NS_IMETHOD GetNativeEvent(PRBool & realEvent, void* & event); \
-  NS_IMETHOD DispatchNativeEvent(PRBool realEvent, void * event); \
-  NS_IMETHOD Exit(void); 
-
-/* Use this macro to declare functions that forward the behavior of this interface to another object. */
-#define NS_FORWARD_NSIAPPSHELL(_to) \
-  NS_IMETHOD Create(int *argc, char **argv) { return _to Create(argc, argv); } \
-  NS_IMETHOD Run(void) { return _to Run(); } \
-  NS_IMETHOD Spinup(void) { return _to Spinup(); } \
-  NS_IMETHOD Spindown(void) { return _to Spindown(); } \
-  NS_IMETHOD ListenToEventQueue(nsIEventQueue *queue, PRBool listen) { return _to ListenToEventQueue(queue, listen); } \
-  NS_IMETHOD GetNativeEvent(PRBool & realEvent, void* & event) { return _to GetNativeEvent(realEvent, event); } \
-  NS_IMETHOD DispatchNativeEvent(PRBool realEvent, void * event) { return _to DispatchNativeEvent(realEvent, event); } \
-  NS_IMETHOD Exit(void) { return _to Exit(); } 
-
-/* Use this macro to declare functions that forward the behavior of this interface to another object in a safe way. */
-#define NS_FORWARD_SAFE_NSIAPPSHELL(_to) \
-  NS_IMETHOD Create(int *argc, char **argv) { return !_to ? NS_ERROR_NULL_POINTER : _to->Create(argc, argv); } \
-  NS_IMETHOD Run(void) { return !_to ? NS_ERROR_NULL_POINTER : _to->Run(); } \
-  NS_IMETHOD Spinup(void) { return !_to ? NS_ERROR_NULL_POINTER : _to->Spinup(); } \
-  NS_IMETHOD Spindown(void) { return !_to ? NS_ERROR_NULL_POINTER : _to->Spindown(); } \
-  NS_IMETHOD ListenToEventQueue(nsIEventQueue *queue, PRBool listen) { return !_to ? NS_ERROR_NULL_POINTER : _to->ListenToEventQueue(queue, listen); } \
-  NS_IMETHOD GetNativeEvent(PRBool & realEvent, void* & event) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetNativeEvent(realEvent, event); } \
-  NS_IMETHOD DispatchNativeEvent(PRBool realEvent, void * event) { return !_to ? NS_ERROR_NULL_POINTER : _to->DispatchNativeEvent(realEvent, event); } \
-  NS_IMETHOD Exit(void) { return !_to ? NS_ERROR_NULL_POINTER : _to->Exit(); } 
-
-#if 0
-/* Use the code below as a template for the implementation class for this interface. */
-
-/* Header file */
-class nsAppShell : public nsIAppShell
-{
-public:
-  NS_DECL_ISUPPORTS
-  NS_DECL_NSIAPPSHELL
-
-  nsAppShell();
-
-private:
-  ~nsAppShell();
-
-protected:
-  /* additional members */
-};
-
-/* Implementation file */
-NS_IMPL_ISUPPORTS1(nsAppShell, nsIAppShell)
-
-nsAppShell::nsAppShell()
-{
-  /* member initializers and constructor code */
-}
-
-nsAppShell::~nsAppShell()
-{
-  /* destructor code */
-}
-
-/* void Create (inout int argc, inout string argv); */
-NS_IMETHODIMP nsAppShell::Create(int *argc, char **argv)
-{
-    return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-/* void Run (); */
-NS_IMETHODIMP nsAppShell::Run()
-{
-    return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-/* void Spinup (); */
-NS_IMETHODIMP nsAppShell::Spinup()
-{
-    return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-/* void Spindown (); */
-NS_IMETHODIMP nsAppShell::Spindown()
-{
-    return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-/* void ListenToEventQueue (in nsIEventQueue queue, in boolean listen); */
-NS_IMETHODIMP nsAppShell::ListenToEventQueue(nsIEventQueue *queue, PRBool listen)
-{
-    return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-/* void GetNativeEvent (in PRBoolRef realEvent, in voidPtrRef event); */
-NS_IMETHODIMP nsAppShell::GetNativeEvent(PRBool & realEvent, void* & event)
-{
-    return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-/* void DispatchNativeEvent (in boolean realEvent, in voidPtr event); */
-NS_IMETHODIMP nsAppShell::DispatchNativeEvent(PRBool realEvent, void * event)
-{
-    return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-/* void Exit (); */
-NS_IMETHODIMP nsAppShell::Exit()
-{
-    return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-/* End of implementation class template. */
-#endif
-
 class nsIInterfaceRequestor; /* forward declaration */
 
 class nsIInterfaceRequestor; /* forward declaration */
@@ -2422,47 +2265,87 @@ class nsICacheSession; /* forward declaration */
 
 class nsICacheVisitor; /* forward declaration */
 
+class nsIEventTarget; /* forward declaration */
+
 
 /* starting interface:    nsICacheService */
-#define NS_ICACHESERVICE_IID_STR "de114eb4-29fc-4959-b2f7-2d03eb9bc771"
+#define NS_ICACHESERVICE_IID_STR "14dbe1e9-f3bc-45af-92f4-2c574fcd4e39"
 
 #define NS_ICACHESERVICE_IID \
-  {0xde114eb4, 0x29fc, 0x4959, \
-    { 0xb2, 0xf7, 0x2d, 0x03, 0xeb, 0x9b, 0xc7, 0x71 }}
+  {0x14dbe1e9, 0xf3bc, 0x45af, \
+    { 0x92, 0xf4, 0x2c, 0x57, 0x4f, 0xcd, 0x4e, 0x39 }}
 
 class NS_NO_VTABLE nsICacheService : public nsISupports {
  public: 
 
   NS_DEFINE_STATIC_IID_ACCESSOR(NS_ICACHESERVICE_IID)
 
-  /* nsICacheSession createSession (in string client_id, in nsCacheStoragePolicy storage_policy, in boolean stream_based); */
-  NS_IMETHOD CreateSession(const char *client_id, nsCacheStoragePolicy storage_policy, PRBool stream_based, nsICacheSession **_retval) = 0;
+  /**
+     * Create a cache session
+     *
+     * A cache session represents a client's access into the cache.  The cache
+     * session is not "owned" by the cache service.  Hence, it is possible to
+     * create duplicate cache sessions.  Entries created by a cache session
+     * are invisible to other cache sessions, unless the cache sessions are
+     * equivalent.
+     *
+     * @param clientID - Specifies the name of the client using the cache.
+     * @param storagePolicy - Limits the storage policy for all entries
+     *   accessed via the returned session.  As a result, devices excluded
+     *   by the storage policy will not be searched when opening entries
+     *   from the returned session.
+     * @param streamBased - Indicates whether or not the data being cached
+     *   can be represented as a stream.  The storagePolicy must be 
+     *   consistent with the value of this field.  For example, a non-stream-
+     *   based cache entry can only have a storage policy of STORE_IN_MEMORY.
+     * @return new cache session.
+     */
+  /* nsICacheSession createSession (in string clientID, in nsCacheStoragePolicy storagePolicy, in boolean streamBased); */
+  NS_IMETHOD CreateSession(const char *clientID, nsCacheStoragePolicy storagePolicy, PRBool streamBased, nsICacheSession **_retval) = 0;
 
+  /**
+     * Visit entries stored in the cache.  Used to implement about:cache.
+     */
   /* void visitEntries (in nsICacheVisitor visitor); */
   NS_IMETHOD VisitEntries(nsICacheVisitor *visitor) = 0;
 
-  /* void evictEntries (in nsCacheStoragePolicy storage_policy); */
-  NS_IMETHOD EvictEntries(nsCacheStoragePolicy storage_policy) = 0;
+  /**
+     * Evicts all entries in all devices implied by the storage policy.
+     *
+     * @note This function may evict some items but will throw if it fails to evict
+     *       everything.
+     */
+  /* void evictEntries (in nsCacheStoragePolicy storagePolicy); */
+  NS_IMETHOD EvictEntries(nsCacheStoragePolicy storagePolicy) = 0;
+
+  /**
+     * Event target which is used for I/O operations
+     */
+  /* readonly attribute nsIEventTarget cacheIOTarget; */
+  NS_IMETHOD GetCacheIOTarget(nsIEventTarget * *aCacheIOTarget) = 0;
 
 };
 
 /* Use this macro when declaring classes that implement this interface. */
 #define NS_DECL_NSICACHESERVICE \
-  NS_IMETHOD CreateSession(const char *client_id, nsCacheStoragePolicy storage_policy, PRBool stream_based, nsICacheSession **_retval); \
+  NS_IMETHOD CreateSession(const char *clientID, nsCacheStoragePolicy storagePolicy, PRBool streamBased, nsICacheSession **_retval); \
   NS_IMETHOD VisitEntries(nsICacheVisitor *visitor); \
-  NS_IMETHOD EvictEntries(nsCacheStoragePolicy storage_policy); 
+  NS_IMETHOD EvictEntries(nsCacheStoragePolicy storagePolicy); \
+  NS_IMETHOD GetCacheIOTarget(nsIEventTarget * *aCacheIOTarget); 
 
 /* Use this macro to declare functions that forward the behavior of this interface to another object. */
 #define NS_FORWARD_NSICACHESERVICE(_to) \
-  NS_IMETHOD CreateSession(const char *client_id, nsCacheStoragePolicy storage_policy, PRBool stream_based, nsICacheSession **_retval) { return _to CreateSession(client_id, storage_policy, stream_based, _retval); } \
+  NS_IMETHOD CreateSession(const char *clientID, nsCacheStoragePolicy storagePolicy, PRBool streamBased, nsICacheSession **_retval) { return _to CreateSession(clientID, storagePolicy, streamBased, _retval); } \
   NS_IMETHOD VisitEntries(nsICacheVisitor *visitor) { return _to VisitEntries(visitor); } \
-  NS_IMETHOD EvictEntries(nsCacheStoragePolicy storage_policy) { return _to EvictEntries(storage_policy); } 
+  NS_IMETHOD EvictEntries(nsCacheStoragePolicy storagePolicy) { return _to EvictEntries(storagePolicy); } \
+  NS_IMETHOD GetCacheIOTarget(nsIEventTarget * *aCacheIOTarget) { return _to GetCacheIOTarget(aCacheIOTarget); } 
 
 /* Use this macro to declare functions that forward the behavior of this interface to another object in a safe way. */
 #define NS_FORWARD_SAFE_NSICACHESERVICE(_to) \
-  NS_IMETHOD CreateSession(const char *client_id, nsCacheStoragePolicy storage_policy, PRBool stream_based, nsICacheSession **_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->CreateSession(client_id, storage_policy, stream_based, _retval); } \
+  NS_IMETHOD CreateSession(const char *clientID, nsCacheStoragePolicy storagePolicy, PRBool streamBased, nsICacheSession **_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->CreateSession(clientID, storagePolicy, streamBased, _retval); } \
   NS_IMETHOD VisitEntries(nsICacheVisitor *visitor) { return !_to ? NS_ERROR_NULL_POINTER : _to->VisitEntries(visitor); } \
-  NS_IMETHOD EvictEntries(nsCacheStoragePolicy storage_policy) { return !_to ? NS_ERROR_NULL_POINTER : _to->EvictEntries(storage_policy); } 
+  NS_IMETHOD EvictEntries(nsCacheStoragePolicy storagePolicy) { return !_to ? NS_ERROR_NULL_POINTER : _to->EvictEntries(storagePolicy); } \
+  NS_IMETHOD GetCacheIOTarget(nsIEventTarget * *aCacheIOTarget) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetCacheIOTarget(aCacheIOTarget); } 
 
 #if 0
 /* Use the code below as a template for the implementation class for this interface. */
@@ -2496,8 +2379,8 @@ nsCacheService::~nsCacheService()
   /* destructor code */
 }
 
-/* nsICacheSession createSession (in string client_id, in nsCacheStoragePolicy storage_policy, in boolean stream_based); */
-NS_IMETHODIMP nsCacheService::CreateSession(const char *client_id, nsCacheStoragePolicy storage_policy, PRBool stream_based, nsICacheSession **_retval)
+/* nsICacheSession createSession (in string clientID, in nsCacheStoragePolicy storagePolicy, in boolean streamBased); */
+NS_IMETHODIMP nsCacheService::CreateSession(const char *clientID, nsCacheStoragePolicy storagePolicy, PRBool streamBased, nsICacheSession **_retval)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
@@ -2508,8 +2391,14 @@ NS_IMETHODIMP nsCacheService::VisitEntries(nsICacheVisitor *visitor)
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* void evictEntries (in nsCacheStoragePolicy storage_policy); */
-NS_IMETHODIMP nsCacheService::EvictEntries(nsCacheStoragePolicy storage_policy)
+/* void evictEntries (in nsCacheStoragePolicy storagePolicy); */
+NS_IMETHODIMP nsCacheService::EvictEntries(nsCacheStoragePolicy storagePolicy)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* readonly attribute nsIEventTarget cacheIOTarget; */
+NS_IMETHODIMP nsCacheService::GetCacheIOTarget(nsIEventTarget * *aCacheIOTarget)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
@@ -2783,32 +2672,70 @@ NS_IMETHODIMP nsRequest::SetLoadFlags(nsLoadFlags aLoadFlags)
 
 
 /* starting interface:    nsIURI */
-#define NS_IURI_IID_STR "07a22cc0-0ce5-11d3-9331-00104ba0fd40"
+#define NS_IURI_IID_STR "395fe045-7d18-4adb-a3fd-af98c8a1af11"
 
 #define NS_IURI_IID \
-  {0x07a22cc0, 0x0ce5, 0x11d3, \
-    { 0x93, 0x31, 0x00, 0x10, 0x4b, 0xa0, 0xfd, 0x40 }}
+  {0x395fe045, 0x7d18, 0x4adb, \
+    { 0xa3, 0xfd, 0xaf, 0x98, 0xc8, 0xa1, 0xaf, 0x11 }}
 
 class NS_NO_VTABLE nsIURI : public nsISupports {
  public: 
 
   NS_DEFINE_STATIC_IID_ACCESSOR(NS_IURI_IID)
 
+  /************************************************************************
+     * The URI is broken down into the following principal components:
+     */
+/**
+     * Returns a string representation of the URI. Setting the spec causes
+     * the new spec to be parsed per the rules for the scheme the URI
+     * currently has.  In particular, setting the spec to a URI string with a
+     * different scheme will generally produce incorrect results; no one
+     * outside of a protocol handler implementation should be doing that.  If
+     * the URI stores information from the nsIIOService.newURI call used to
+     * create it other than just the parsed string, then behavior of this
+     * information on setting the spec attribute is undefined.
+     *
+     * Some characters may be escaped.
+     */
   /* attribute AUTF8String spec; */
   NS_IMETHOD GetSpec(nsACString & aSpec) = 0;
   NS_IMETHOD SetSpec(const nsACString & aSpec) = 0;
 
+  /**
+     * The prePath (eg. scheme://user:password@host:port) returns the string
+     * before the path.  This is useful for authentication or managing sessions.
+     *
+     * Some characters may be escaped.
+     */
   /* readonly attribute AUTF8String prePath; */
   NS_IMETHOD GetPrePath(nsACString & aPrePath) = 0;
 
+  /**
+     * The Scheme is the protocol to which this URI refers.  The scheme is
+     * restricted to the US-ASCII charset per RFC2396.  Setting this is
+     * highly discouraged outside of a protocol handler implementation, since
+     * that will generally lead to incorrect results.
+     */
   /* attribute ACString scheme; */
   NS_IMETHOD GetScheme(nsACString & aScheme) = 0;
   NS_IMETHOD SetScheme(const nsACString & aScheme) = 0;
 
+  /**
+     * The username:password (or username only if value doesn't contain a ':')
+     *
+     * Some characters may be escaped.
+     */
   /* attribute AUTF8String userPass; */
   NS_IMETHOD GetUserPass(nsACString & aUserPass) = 0;
   NS_IMETHOD SetUserPass(const nsACString & aUserPass) = 0;
 
+  /**
+     * The optional username and password, assuming the preHost consists of
+     * username:password.
+     *
+     * Some characters may be escaped.
+     */
   /* attribute AUTF8String username; */
   NS_IMETHOD GetUsername(nsACString & aUsername) = 0;
   NS_IMETHOD SetUsername(const nsACString & aUsername) = 0;
@@ -2817,42 +2744,149 @@ class NS_NO_VTABLE nsIURI : public nsISupports {
   NS_IMETHOD GetPassword(nsACString & aPassword) = 0;
   NS_IMETHOD SetPassword(const nsACString & aPassword) = 0;
 
+  /**
+     * The host:port (or simply the host, if port == -1).
+     *
+     * Characters are NOT escaped.
+     */
   /* attribute AUTF8String hostPort; */
   NS_IMETHOD GetHostPort(nsACString & aHostPort) = 0;
   NS_IMETHOD SetHostPort(const nsACString & aHostPort) = 0;
 
+  /**
+     * The host is the internet domain name to which this URI refers.  It could
+     * be an IPv4 (or IPv6) address literal.  If supported, it could be a
+     * non-ASCII internationalized domain name.
+     *
+     * Characters are NOT escaped.
+     */
   /* attribute AUTF8String host; */
   NS_IMETHOD GetHost(nsACString & aHost) = 0;
   NS_IMETHOD SetHost(const nsACString & aHost) = 0;
 
+  /**
+     * A port value of -1 corresponds to the protocol's default port (eg. -1
+     * implies port 80 for http URIs).
+     */
   /* attribute long port; */
   NS_IMETHOD GetPort(PRInt32 *aPort) = 0;
   NS_IMETHOD SetPort(PRInt32 aPort) = 0;
 
+  /**
+     * The path, typically including at least a leading '/' (but may also be
+     * empty, depending on the protocol).
+     *
+     * Some characters may be escaped.
+     */
   /* attribute AUTF8String path; */
   NS_IMETHOD GetPath(nsACString & aPath) = 0;
   NS_IMETHOD SetPath(const nsACString & aPath) = 0;
 
+  /************************************************************************
+     * An URI supports the following methods:
+     */
+/**
+     * URI equivalence test (not a strict string comparison).
+     *
+     * eg. http://foo.com:80/ == http://foo.com/
+     */
   /* boolean equals (in nsIURI other); */
   NS_IMETHOD Equals(nsIURI *other, PRBool *_retval) = 0;
 
+  /**
+     * An optimization to do scheme checks without requiring the users of nsIURI
+     * to GetScheme, thereby saving extra allocating and freeing. Returns true if
+     * the schemes match (case ignored).
+     */
   /* boolean schemeIs (in string scheme); */
   NS_IMETHOD SchemeIs(const char *scheme, PRBool *_retval) = 0;
 
+  /**
+     * Clones the current URI.
+     */
   /* nsIURI clone (); */
   NS_IMETHOD Clone(nsIURI **_retval) = 0;
 
-  /* AUTF8String resolve (in AUTF8String relative_path); */
-  NS_IMETHOD Resolve(const nsACString & relative_path, nsACString & _retval) = 0;
+  /**
+     * This method resolves a relative string into an absolute URI string,
+     * using this URI as the base. 
+     *
+     * NOTE: some implementations may have no concept of a relative URI.
+     */
+  /* AUTF8String resolve (in AUTF8String relativePath); */
+  NS_IMETHOD Resolve(const nsACString & relativePath, nsACString & _retval) = 0;
 
+  /************************************************************************
+     * Additional attributes:
+     */
+/**
+     * The URI spec with an ASCII compatible encoding.  Host portion follows
+     * the IDNA draft spec.  Other parts are URL-escaped per the rules of
+     * RFC2396.  The result is strictly ASCII.
+     */
   /* readonly attribute ACString asciiSpec; */
   NS_IMETHOD GetAsciiSpec(nsACString & aAsciiSpec) = 0;
 
+  /**
+     * The URI host with an ASCII compatible encoding.  Follows the IDNA
+     * draft spec for converting internationalized domain names (UTF-8) to
+     * ASCII for compatibility with existing internet infrasture.
+     */
   /* readonly attribute ACString asciiHost; */
   NS_IMETHOD GetAsciiHost(nsACString & aAsciiHost) = 0;
 
+  /**
+     * The charset of the document from which this URI originated.  An empty
+     * value implies UTF-8.
+     *
+     * If this value is something other than UTF-8 then the URI components
+     * (e.g., spec, prePath, username, etc.) will all be fully URL-escaped.
+     * Otherwise, the URI components may contain unescaped multibyte UTF-8
+     * characters.
+     */
   /* readonly attribute ACString originCharset; */
   NS_IMETHOD GetOriginCharset(nsACString & aOriginCharset) = 0;
+
+  /************************************************************************
+     * Additional attribute & methods added for .ref support:
+     */
+/**
+     * Returns the reference portion (the part after the "#") of the URI.
+     * If there isn't one, an empty string is returned.
+     *
+     * Some characters may be escaped.
+     */
+  /* attribute AUTF8String ref; */
+  NS_IMETHOD GetRef(nsACString & aRef) = 0;
+  NS_IMETHOD SetRef(const nsACString & aRef) = 0;
+
+  /**
+     * URI equivalence test (not a strict string comparison), ignoring
+     * the value of the .ref member.
+     *
+     * eg. http://foo.com/# == http://foo.com/
+     *     http://foo.com/#aaa == http://foo.com/#bbb
+     */
+  /* boolean equalsExceptRef (in nsIURI other); */
+  NS_IMETHOD EqualsExceptRef(nsIURI *other, PRBool *_retval) = 0;
+
+  /**
+     * Clones the current URI, clearing the 'ref' attribute in the clone.
+     */
+  /* nsIURI cloneIgnoringRef (); */
+  NS_IMETHOD CloneIgnoringRef(nsIURI **_retval) = 0;
+
+  /**
+     * returns a string for the current URI with the ref element cleared.
+     */
+  /* readonly attribute AUTF8String specIgnoringRef; */
+  NS_IMETHOD GetSpecIgnoringRef(nsACString & aSpecIgnoringRef) = 0;
+
+  /**
+     * Returns if there is a reference portion (the part after the "#") of the URI.
+     */
+  /* readonly attribute boolean hasRef; */
+  NS_IMETHOD GetHasRef(PRBool *aHasRef) = 0;
 
 };
 
@@ -2880,10 +2914,16 @@ class NS_NO_VTABLE nsIURI : public nsISupports {
   NS_IMETHOD Equals(nsIURI *other, PRBool *_retval); \
   NS_IMETHOD SchemeIs(const char *scheme, PRBool *_retval); \
   NS_IMETHOD Clone(nsIURI **_retval); \
-  NS_IMETHOD Resolve(const nsACString & relative_path, nsACString & _retval); \
+  NS_IMETHOD Resolve(const nsACString & relativePath, nsACString & _retval); \
   NS_IMETHOD GetAsciiSpec(nsACString & aAsciiSpec); \
   NS_IMETHOD GetAsciiHost(nsACString & aAsciiHost); \
-  NS_IMETHOD GetOriginCharset(nsACString & aOriginCharset); 
+  NS_IMETHOD GetOriginCharset(nsACString & aOriginCharset); \
+  NS_IMETHOD GetRef(nsACString & aRef); \
+  NS_IMETHOD SetRef(const nsACString & aRef); \
+  NS_IMETHOD EqualsExceptRef(nsIURI *other, PRBool *_retval); \
+  NS_IMETHOD CloneIgnoringRef(nsIURI **_retval); \
+  NS_IMETHOD GetSpecIgnoringRef(nsACString & aSpecIgnoringRef); \
+  NS_IMETHOD GetHasRef(PRBool *aHasRef); 
 
 /* Use this macro to declare functions that forward the behavior of this interface to another object. */
 #define NS_FORWARD_NSIURI(_to) \
@@ -2909,10 +2949,16 @@ class NS_NO_VTABLE nsIURI : public nsISupports {
   NS_IMETHOD Equals(nsIURI *other, PRBool *_retval) { return _to Equals(other, _retval); } \
   NS_IMETHOD SchemeIs(const char *scheme, PRBool *_retval) { return _to SchemeIs(scheme, _retval); } \
   NS_IMETHOD Clone(nsIURI **_retval) { return _to Clone(_retval); } \
-  NS_IMETHOD Resolve(const nsACString & relative_path, nsACString & _retval) { return _to Resolve(relative_path, _retval); } \
+  NS_IMETHOD Resolve(const nsACString & relativePath, nsACString & _retval) { return _to Resolve(relativePath, _retval); } \
   NS_IMETHOD GetAsciiSpec(nsACString & aAsciiSpec) { return _to GetAsciiSpec(aAsciiSpec); } \
   NS_IMETHOD GetAsciiHost(nsACString & aAsciiHost) { return _to GetAsciiHost(aAsciiHost); } \
-  NS_IMETHOD GetOriginCharset(nsACString & aOriginCharset) { return _to GetOriginCharset(aOriginCharset); } 
+  NS_IMETHOD GetOriginCharset(nsACString & aOriginCharset) { return _to GetOriginCharset(aOriginCharset); } \
+  NS_IMETHOD GetRef(nsACString & aRef) { return _to GetRef(aRef); } \
+  NS_IMETHOD SetRef(const nsACString & aRef) { return _to SetRef(aRef); } \
+  NS_IMETHOD EqualsExceptRef(nsIURI *other, PRBool *_retval) { return _to EqualsExceptRef(other, _retval); } \
+  NS_IMETHOD CloneIgnoringRef(nsIURI **_retval) { return _to CloneIgnoringRef(_retval); } \
+  NS_IMETHOD GetSpecIgnoringRef(nsACString & aSpecIgnoringRef) { return _to GetSpecIgnoringRef(aSpecIgnoringRef); } \
+  NS_IMETHOD GetHasRef(PRBool *aHasRef) { return _to GetHasRef(aHasRef); } 
 
 /* Use this macro to declare functions that forward the behavior of this interface to another object in a safe way. */
 #define NS_FORWARD_SAFE_NSIURI(_to) \
@@ -2938,10 +2984,16 @@ class NS_NO_VTABLE nsIURI : public nsISupports {
   NS_IMETHOD Equals(nsIURI *other, PRBool *_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Equals(other, _retval); } \
   NS_IMETHOD SchemeIs(const char *scheme, PRBool *_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->SchemeIs(scheme, _retval); } \
   NS_IMETHOD Clone(nsIURI **_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Clone(_retval); } \
-  NS_IMETHOD Resolve(const nsACString & relative_path, nsACString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Resolve(relative_path, _retval); } \
+  NS_IMETHOD Resolve(const nsACString & relativePath, nsACString & _retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->Resolve(relativePath, _retval); } \
   NS_IMETHOD GetAsciiSpec(nsACString & aAsciiSpec) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetAsciiSpec(aAsciiSpec); } \
   NS_IMETHOD GetAsciiHost(nsACString & aAsciiHost) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetAsciiHost(aAsciiHost); } \
-  NS_IMETHOD GetOriginCharset(nsACString & aOriginCharset) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetOriginCharset(aOriginCharset); } 
+  NS_IMETHOD GetOriginCharset(nsACString & aOriginCharset) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetOriginCharset(aOriginCharset); } \
+  NS_IMETHOD GetRef(nsACString & aRef) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetRef(aRef); } \
+  NS_IMETHOD SetRef(const nsACString & aRef) { return !_to ? NS_ERROR_NULL_POINTER : _to->SetRef(aRef); } \
+  NS_IMETHOD EqualsExceptRef(nsIURI *other, PRBool *_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->EqualsExceptRef(other, _retval); } \
+  NS_IMETHOD CloneIgnoringRef(nsIURI **_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->CloneIgnoringRef(_retval); } \
+  NS_IMETHOD GetSpecIgnoringRef(nsACString & aSpecIgnoringRef) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetSpecIgnoringRef(aSpecIgnoringRef); } \
+  NS_IMETHOD GetHasRef(PRBool *aHasRef) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetHasRef(aHasRef); } 
 
 #if 0
 /* Use the code below as a template for the implementation class for this interface. */
@@ -3089,8 +3141,8 @@ NS_IMETHODIMP nsURI::Clone(nsIURI **_retval)
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* AUTF8String resolve (in AUTF8String relative_path); */
-NS_IMETHODIMP nsURI::Resolve(const nsACString & relative_path, nsACString & _retval)
+/* AUTF8String resolve (in AUTF8String relativePath); */
+NS_IMETHODIMP nsURI::Resolve(const nsACString & relativePath, nsACString & _retval)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
@@ -3109,6 +3161,40 @@ NS_IMETHODIMP nsURI::GetAsciiHost(nsACString & aAsciiHost)
 
 /* readonly attribute ACString originCharset; */
 NS_IMETHODIMP nsURI::GetOriginCharset(nsACString & aOriginCharset)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* attribute AUTF8String ref; */
+NS_IMETHODIMP nsURI::GetRef(nsACString & aRef)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+NS_IMETHODIMP nsURI::SetRef(const nsACString & aRef)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* boolean equalsExceptRef (in nsIURI other); */
+NS_IMETHODIMP nsURI::EqualsExceptRef(nsIURI *other, PRBool *_retval)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* nsIURI cloneIgnoringRef (); */
+NS_IMETHODIMP nsURI::CloneIgnoringRef(nsIURI **_retval)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* readonly attribute AUTF8String specIgnoringRef; */
+NS_IMETHODIMP nsURI::GetSpecIgnoringRef(nsACString & aSpecIgnoringRef)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* readonly attribute boolean hasRef; */
+NS_IMETHODIMP nsURI::GetHasRef(PRBool *aHasRef)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
@@ -3689,51 +3775,114 @@ NS_IMETHODIMP nsClipboardCommands::SelectNone()
 
 
 /* starting interface:    nsIComponentManager */
-#define NS_ICOMPONENTMANAGER_IID_STR "a88e5a60-205a-4bb1-94e1-2628daf51eae"
+#define NS_ICOMPONENTMANAGER_IID_STR "1d940426-5fe5-42c3-84ae-a300f2d9ebd5"
 
 #define NS_ICOMPONENTMANAGER_IID \
-  {0xa88e5a60, 0x205a, 0x4bb1, \
-    { 0x94, 0xe1, 0x26, 0x28, 0xda, 0xf5, 0x1e, 0xae }}
+  {0x1d940426, 0x5fe5, 0x42c3, \
+    { 0x84, 0xae, 0xa3, 0x00, 0xf2, 0xd9, 0xeb, 0xd5 }}
 
 class NS_NO_VTABLE nsIComponentManager : public nsISupports {
  public: 
 
   NS_DEFINE_STATIC_IID_ACCESSOR(NS_ICOMPONENTMANAGER_IID)
 
-  /* void getClassObject (in nsCIDRef class_id, in nsIIDRef iid, [iid_is (iid), retval] out nsQIResult result); */
-  NS_IMETHOD GetClassObject(const nsCID & class_id, const nsIID & iid, void * *result) = 0;
+  /**
+     * getClassObject
+     *
+     * Returns the factory object that can be used to create instances of
+     * CID aClass
+     *
+     * @param aClass The classid of the factory that is being requested
+     */
+  /* void getClassObject (in nsCIDRef aClass, in nsIIDRef aIID, [iid_is (aIID), retval] out nsQIResult result); */
+  NS_IMETHOD GetClassObject(const nsCID & aClass, const nsIID & aIID, void * *result) = 0;
 
-  /* void getClassObjectByContractID (in string contract_id, in nsIIDRef iid, [iid_is (iid), retval] out nsQIResult result); */
-  NS_IMETHOD GetClassObjectByContractID(const char *contract_id, const nsIID & iid, void * *result) = 0;
+  /**
+     * getClassObjectByContractID
+     *
+     * Returns the factory object that can be used to create instances of
+     * CID aClass
+     *
+     * @param aClass The classid of the factory that is being requested
+     */
+  /* void getClassObjectByContractID (in string aContractID, in nsIIDRef aIID, [iid_is (aIID), retval] out nsQIResult result); */
+  NS_IMETHOD GetClassObjectByContractID(const char *aContractID, const nsIID & aIID, void * *result) = 0;
 
-  /* void createInstance (in nsCIDRef class_id, in nsISupports delegate, in nsIIDRef iid, [iid_is (iid), retval] out nsQIResult result); */
-  NS_IMETHOD CreateInstance(const nsCID & class_id, nsISupports *delegate, const nsIID & iid, void * *result) = 0;
+  /**
+     * createInstance
+     *
+     * Create an instance of the CID aClass and return the interface aIID.
+     *
+     * @param aClass : ClassID of object instance requested
+     * @param aDelegate : Used for aggregation
+     * @param aIID : IID of interface requested
+     */
+  /* void createInstance (in nsCIDRef aClass, in nsISupports aDelegate, in nsIIDRef aIID, [iid_is (aIID), retval] out nsQIResult result); */
+  NS_IMETHOD CreateInstance(const nsCID & aClass, nsISupports *aDelegate, const nsIID & aIID, void * *result) = 0;
 
-  /* void createInstanceByContractID (in string contract_id, in nsISupports delegate, in nsIIDRef iid, [iid_is (iid), retval] out nsQIResult result); */
-  NS_IMETHOD CreateInstanceByContractID(const char *contract_id, nsISupports *delegate, const nsIID & iid, void * *result) = 0;
+  /**
+     * createInstanceByContractID
+     *
+     * Create an instance of the CID that implements aContractID and return the
+     * interface aIID. 
+     *
+     * @param aContractID : aContractID of object instance requested
+     * @param aDelegate : Used for aggregation
+     * @param aIID : IID of interface requested
+     */
+  /* void createInstanceByContractID (in string aContractID, in nsISupports aDelegate, in nsIIDRef aIID, [iid_is (aIID), retval] out nsQIResult result); */
+  NS_IMETHOD CreateInstanceByContractID(const char *aContractID, nsISupports *aDelegate, const nsIID & aIID, void * *result) = 0;
+
+  /**
+     * addBootstrappedManifestLocation
+     *
+     * Adds a bootstrapped manifest location on runtime.
+     *
+     * @param aLocation : A directory where chrome.manifest resides,
+     *                    or an XPI with it on the root.
+     */
+  /* void addBootstrappedManifestLocation (in nsILocalFile aLocation); */
+  NS_IMETHOD AddBootstrappedManifestLocation(nsILocalFile *aLocation) = 0;
+
+  /**
+     * removeBootstrappedManifestLocation
+     *
+     * Removes a bootstrapped manifest location on runtime.
+     *
+     * @param aLocation : A directory where chrome.manifest resides,
+     *                    or an XPI with it on the root.
+     */
+  /* void removeBootstrappedManifestLocation (in nsILocalFile aLocation); */
+  NS_IMETHOD RemoveBootstrappedManifestLocation(nsILocalFile *aLocation) = 0;
 
 };
 
 /* Use this macro when declaring classes that implement this interface. */
 #define NS_DECL_NSICOMPONENTMANAGER \
-  NS_IMETHOD GetClassObject(const nsCID & class_id, const nsIID & iid, void * *result); \
-  NS_IMETHOD GetClassObjectByContractID(const char *contract_id, const nsIID & iid, void * *result); \
-  NS_IMETHOD CreateInstance(const nsCID & class_id, nsISupports *delegate, const nsIID & iid, void * *result); \
-  NS_IMETHOD CreateInstanceByContractID(const char *contract_id, nsISupports *delegate, const nsIID & iid, void * *result); 
+  NS_IMETHOD GetClassObject(const nsCID & aClass, const nsIID & aIID, void * *result); \
+  NS_IMETHOD GetClassObjectByContractID(const char *aContractID, const nsIID & aIID, void * *result); \
+  NS_IMETHOD CreateInstance(const nsCID & aClass, nsISupports *aDelegate, const nsIID & aIID, void * *result); \
+  NS_IMETHOD CreateInstanceByContractID(const char *aContractID, nsISupports *aDelegate, const nsIID & aIID, void * *result); \
+  NS_IMETHOD AddBootstrappedManifestLocation(nsILocalFile *aLocation); \
+  NS_IMETHOD RemoveBootstrappedManifestLocation(nsILocalFile *aLocation); 
 
 /* Use this macro to declare functions that forward the behavior of this interface to another object. */
 #define NS_FORWARD_NSICOMPONENTMANAGER(_to) \
-  NS_IMETHOD GetClassObject(const nsCID & class_id, const nsIID & iid, void * *result) { return _to GetClassObject(class_id, iid, result); } \
-  NS_IMETHOD GetClassObjectByContractID(const char *contract_id, const nsIID & iid, void * *result) { return _to GetClassObjectByContractID(contract_id, iid, result); } \
-  NS_IMETHOD CreateInstance(const nsCID & class_id, nsISupports *delegate, const nsIID & iid, void * *result) { return _to CreateInstance(class_id, delegate, iid, result); } \
-  NS_IMETHOD CreateInstanceByContractID(const char *contract_id, nsISupports *delegate, const nsIID & iid, void * *result) { return _to CreateInstanceByContractID(contract_id, delegate, iid, result); } 
+  NS_IMETHOD GetClassObject(const nsCID & aClass, const nsIID & aIID, void * *result) { return _to GetClassObject(aClass, aIID, result); } \
+  NS_IMETHOD GetClassObjectByContractID(const char *aContractID, const nsIID & aIID, void * *result) { return _to GetClassObjectByContractID(aContractID, aIID, result); } \
+  NS_IMETHOD CreateInstance(const nsCID & aClass, nsISupports *aDelegate, const nsIID & aIID, void * *result) { return _to CreateInstance(aClass, aDelegate, aIID, result); } \
+  NS_IMETHOD CreateInstanceByContractID(const char *aContractID, nsISupports *aDelegate, const nsIID & aIID, void * *result) { return _to CreateInstanceByContractID(aContractID, aDelegate, aIID, result); } \
+  NS_IMETHOD AddBootstrappedManifestLocation(nsILocalFile *aLocation) { return _to AddBootstrappedManifestLocation(aLocation); } \
+  NS_IMETHOD RemoveBootstrappedManifestLocation(nsILocalFile *aLocation) { return _to RemoveBootstrappedManifestLocation(aLocation); } 
 
 /* Use this macro to declare functions that forward the behavior of this interface to another object in a safe way. */
 #define NS_FORWARD_SAFE_NSICOMPONENTMANAGER(_to) \
-  NS_IMETHOD GetClassObject(const nsCID & class_id, const nsIID & iid, void * *result) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetClassObject(class_id, iid, result); } \
-  NS_IMETHOD GetClassObjectByContractID(const char *contract_id, const nsIID & iid, void * *result) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetClassObjectByContractID(contract_id, iid, result); } \
-  NS_IMETHOD CreateInstance(const nsCID & class_id, nsISupports *delegate, const nsIID & iid, void * *result) { return !_to ? NS_ERROR_NULL_POINTER : _to->CreateInstance(class_id, delegate, iid, result); } \
-  NS_IMETHOD CreateInstanceByContractID(const char *contract_id, nsISupports *delegate, const nsIID & iid, void * *result) { return !_to ? NS_ERROR_NULL_POINTER : _to->CreateInstanceByContractID(contract_id, delegate, iid, result); } 
+  NS_IMETHOD GetClassObject(const nsCID & aClass, const nsIID & aIID, void * *result) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetClassObject(aClass, aIID, result); } \
+  NS_IMETHOD GetClassObjectByContractID(const char *aContractID, const nsIID & aIID, void * *result) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetClassObjectByContractID(aContractID, aIID, result); } \
+  NS_IMETHOD CreateInstance(const nsCID & aClass, nsISupports *aDelegate, const nsIID & aIID, void * *result) { return !_to ? NS_ERROR_NULL_POINTER : _to->CreateInstance(aClass, aDelegate, aIID, result); } \
+  NS_IMETHOD CreateInstanceByContractID(const char *aContractID, nsISupports *aDelegate, const nsIID & aIID, void * *result) { return !_to ? NS_ERROR_NULL_POINTER : _to->CreateInstanceByContractID(aContractID, aDelegate, aIID, result); } \
+  NS_IMETHOD AddBootstrappedManifestLocation(nsILocalFile *aLocation) { return !_to ? NS_ERROR_NULL_POINTER : _to->AddBootstrappedManifestLocation(aLocation); } \
+  NS_IMETHOD RemoveBootstrappedManifestLocation(nsILocalFile *aLocation) { return !_to ? NS_ERROR_NULL_POINTER : _to->RemoveBootstrappedManifestLocation(aLocation); } 
 
 #if 0
 /* Use the code below as a template for the implementation class for this interface. */
@@ -3767,26 +3916,38 @@ nsComponentManager::~nsComponentManager()
   /* destructor code */
 }
 
-/* void getClassObject (in nsCIDRef class_id, in nsIIDRef iid, [iid_is (iid), retval] out nsQIResult result); */
-NS_IMETHODIMP nsComponentManager::GetClassObject(const nsCID & class_id, const nsIID & iid, void * *result)
+/* void getClassObject (in nsCIDRef aClass, in nsIIDRef aIID, [iid_is (aIID), retval] out nsQIResult result); */
+NS_IMETHODIMP nsComponentManager::GetClassObject(const nsCID & aClass, const nsIID & aIID, void * *result)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* void getClassObjectByContractID (in string contract_id, in nsIIDRef iid, [iid_is (iid), retval] out nsQIResult result); */
-NS_IMETHODIMP nsComponentManager::GetClassObjectByContractID(const char *contract_id, const nsIID & iid, void * *result)
+/* void getClassObjectByContractID (in string aContractID, in nsIIDRef aIID, [iid_is (aIID), retval] out nsQIResult result); */
+NS_IMETHODIMP nsComponentManager::GetClassObjectByContractID(const char *aContractID, const nsIID & aIID, void * *result)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* void createInstance (in nsCIDRef class_id, in nsISupports delegate, in nsIIDRef iid, [iid_is (iid), retval] out nsQIResult result); */
-NS_IMETHODIMP nsComponentManager::CreateInstance(const nsCID & class_id, nsISupports *delegate, const nsIID & iid, void * *result)
+/* void createInstance (in nsCIDRef aClass, in nsISupports aDelegate, in nsIIDRef aIID, [iid_is (aIID), retval] out nsQIResult result); */
+NS_IMETHODIMP nsComponentManager::CreateInstance(const nsCID & aClass, nsISupports *aDelegate, const nsIID & aIID, void * *result)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* void createInstanceByContractID (in string contract_id, in nsISupports delegate, in nsIIDRef iid, [iid_is (iid), retval] out nsQIResult result); */
-NS_IMETHODIMP nsComponentManager::CreateInstanceByContractID(const char *contract_id, nsISupports *delegate, const nsIID & iid, void * *result)
+/* void createInstanceByContractID (in string aContractID, in nsISupports aDelegate, in nsIIDRef aIID, [iid_is (aIID), retval] out nsQIResult result); */
+NS_IMETHODIMP nsComponentManager::CreateInstanceByContractID(const char *aContractID, nsISupports *aDelegate, const nsIID & aIID, void * *result)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* void addBootstrappedManifestLocation (in nsILocalFile aLocation); */
+NS_IMETHODIMP nsComponentManager::AddBootstrappedManifestLocation(nsILocalFile *aLocation)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* void removeBootstrappedManifestLocation (in nsILocalFile aLocation); */
+NS_IMETHODIMP nsComponentManager::RemoveBootstrappedManifestLocation(nsILocalFile *aLocation)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
@@ -18659,41 +18820,75 @@ NS_IMETHODIMP nsWebProgressListener2::OnRefreshAttempted(nsIWebProgress *web_pro
 /* End of implementation class template. */
 #endif
 
+class nsIURI; /* forward declaration */
+
+class nsICancelable; /* forward declaration */
+
 class nsIMIMEInfo; /* forward declaration */
 
 class nsILocalFile; /* forward declaration */
 
-class nsICancelable; /* forward declaration */
-
 
 /* starting interface:    nsITransfer */
-#define NS_ITRANSFER_IID_STR "23c51569-e9a1-4a92-adeb-3723db82ef7c"
+#define NS_ITRANSFER_IID_STR "3a982955-dc44-422e-8734-8462bf8d2121"
 
 #define NS_ITRANSFER_IID \
-  {0x23c51569, 0xe9a1, 0x4a92, \
-    { 0xad, 0xeb, 0x37, 0x23, 0xdb, 0x82, 0xef, 0x7c }}
+  {0x3a982955, 0xdc44, 0x422e, \
+    { 0x87, 0x34, 0x84, 0x62, 0xbf, 0x8d, 0x21, 0x21 }}
 
 class NS_NO_VTABLE nsITransfer : public nsIWebProgressListener2 {
  public: 
 
   NS_DEFINE_STATIC_IID_ACCESSOR(NS_ITRANSFER_IID)
 
-  /* void init (in nsIURI source, in nsIURI target, in AString display_name, in nsIMIMEInfo mime_info, in PRTime start_time, in nsILocalFile temp_file, in nsICancelable cancelable); */
-  NS_IMETHOD Init(nsIURI *source, nsIURI *target, const nsAString & display_name, nsIMIMEInfo *mime_info, PRTime start_time, nsILocalFile *temp_file, nsICancelable *cancelable) = 0;
+  /**
+     * Initializes the transfer with certain properties.  This function must
+     * be called prior to accessing any properties on this interface.
+     *
+     * @param aSource The source URI of the transfer. Must not be null.
+     *
+     * @param aTarget The target URI of the transfer. Must not be null.
+     *
+     * @param aDisplayName The user-readable description of the transfer.
+     *                     Can be empty.
+     *
+     * @param aMIMEInfo The MIME info associated with the target,
+     *                  including MIME type and helper app when appropriate.
+     *                  This parameter is optional.
+     *
+     * @param startTime Time when the download started (ie, when the first
+     *                  response from the server was received)
+     *                  XXX presumably wbp and exthandler do this differently
+     *
+     * @param aTempFile The location of a temporary file; i.e. a file in which
+     *                  the received data will be stored, but which is not
+     *                  equal to the target file. (will be moved to the real
+     *                  target by the caller, when the download is finished)
+     *                  May be null.
+     *
+     * @param aCancelable An object that can be used to abort the download.
+     *                    Must not be null.
+     *                    Implementations are expected to hold a strong
+     *                    reference to this object until the download is
+     *                    finished, at which point they should release the
+     *                    reference.
+     */
+  /* void init (in nsIURI aSource, in nsIURI aTarget, in AString aDisplayName, in nsIMIMEInfo aMIMEInfo, in PRTime startTime, in nsILocalFile aTempFile, in nsICancelable aCancelable); */
+  NS_IMETHOD Init(nsIURI *aSource, nsIURI *aTarget, const nsAString & aDisplayName, nsIMIMEInfo *aMIMEInfo, PRTime startTime, nsILocalFile *aTempFile, nsICancelable *aCancelable) = 0;
 
 };
 
 /* Use this macro when declaring classes that implement this interface. */
 #define NS_DECL_NSITRANSFER \
-  NS_IMETHOD Init(nsIURI *source, nsIURI *target, const nsAString & display_name, nsIMIMEInfo *mime_info, PRTime start_time, nsILocalFile *temp_file, nsICancelable *cancelable); 
+  NS_IMETHOD Init(nsIURI *aSource, nsIURI *aTarget, const nsAString & aDisplayName, nsIMIMEInfo *aMIMEInfo, PRTime startTime, nsILocalFile *aTempFile, nsICancelable *aCancelable); 
 
 /* Use this macro to declare functions that forward the behavior of this interface to another object. */
 #define NS_FORWARD_NSITRANSFER(_to) \
-  NS_IMETHOD Init(nsIURI *source, nsIURI *target, const nsAString & display_name, nsIMIMEInfo *mime_info, PRTime start_time, nsILocalFile *temp_file, nsICancelable *cancelable) { return _to Init(source, target, display_name, mime_info, start_time, temp_file, cancelable); } 
+  NS_IMETHOD Init(nsIURI *aSource, nsIURI *aTarget, const nsAString & aDisplayName, nsIMIMEInfo *aMIMEInfo, PRTime startTime, nsILocalFile *aTempFile, nsICancelable *aCancelable) { return _to Init(aSource, aTarget, aDisplayName, aMIMEInfo, startTime, aTempFile, aCancelable); } 
 
 /* Use this macro to declare functions that forward the behavior of this interface to another object in a safe way. */
 #define NS_FORWARD_SAFE_NSITRANSFER(_to) \
-  NS_IMETHOD Init(nsIURI *source, nsIURI *target, const nsAString & display_name, nsIMIMEInfo *mime_info, PRTime start_time, nsILocalFile *temp_file, nsICancelable *cancelable) { return !_to ? NS_ERROR_NULL_POINTER : _to->Init(source, target, display_name, mime_info, start_time, temp_file, cancelable); } 
+  NS_IMETHOD Init(nsIURI *aSource, nsIURI *aTarget, const nsAString & aDisplayName, nsIMIMEInfo *aMIMEInfo, PRTime startTime, nsILocalFile *aTempFile, nsICancelable *aCancelable) { return !_to ? NS_ERROR_NULL_POINTER : _to->Init(aSource, aTarget, aDisplayName, aMIMEInfo, startTime, aTempFile, aCancelable); } 
 
 #if 0
 /* Use the code below as a template for the implementation class for this interface. */
@@ -18727,8 +18922,8 @@ nsTransfer::~nsTransfer()
   /* destructor code */
 }
 
-/* void init (in nsIURI source, in nsIURI target, in AString display_name, in nsIMIMEInfo mime_info, in PRTime start_time, in nsILocalFile temp_file, in nsICancelable cancelable); */
-NS_IMETHODIMP nsTransfer::Init(nsIURI *source, nsIURI *target, const nsAString & display_name, nsIMIMEInfo *mime_info, PRTime start_time, nsILocalFile *temp_file, nsICancelable *cancelable)
+/* void init (in nsIURI aSource, in nsIURI aTarget, in AString aDisplayName, in nsIMIMEInfo aMIMEInfo, in PRTime startTime, in nsILocalFile aTempFile, in nsICancelable aCancelable); */
+NS_IMETHODIMP nsTransfer::Init(nsIURI *aSource, nsIURI *aTarget, const nsAString & aDisplayName, nsIMIMEInfo *aMIMEInfo, PRTime startTime, nsILocalFile *aTempFile, nsICancelable *aCancelable)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
@@ -21226,11 +21421,11 @@ NS_IMETHODIMP nsXPCSecurityManager::CanAccess(PRUint32 action, nsIXPCNativeCallC
 
 
 /* starting interface:    nsIPrincipal */
-#define NS_IPRINCIPAL_IID_STR "0575ea96-4561-4dc6-a818-3c4c97c2430d"
+#define NS_IPRINCIPAL_IID_STR "b406a2db-e547-4c95-b8e2-ad09ecb54ce0"
 
 #define NS_IPRINCIPAL_IID \
-  {0x0575ea96, 0x4561, 0x4dc6, \
-    { 0xa8, 0x18, 0x3c, 0x4c, 0x97, 0xc2, 0x43, 0x0d }}
+  {0xb406a2db, 0xe547, 0x4c95, \
+    { 0xb8, 0xe2, 0xad, 0x09, 0xec, 0xb5, 0x4c, 0xe0 }}
 
 class NS_NO_VTABLE nsIPrincipal : public nsISupports {
  public: 
@@ -21297,177 +21492,378 @@ NS_IMETHODIMP nsPrincipal::Placeholder()
 
 
 /* starting interface:    nsIScriptSecurityManager */
-#define NS_ISCRIPTSECURITYMANAGER_IID_STR "f4d74511-2b2d-4a14-a3e4-a392ac5ac3ff"
+#define NS_ISCRIPTSECURITYMANAGER_IID_STR "50eda256-4dd2-4c7c-baed-96983910af9f"
 
 #define NS_ISCRIPTSECURITYMANAGER_IID \
-  {0xf4d74511, 0x2b2d, 0x4a14, \
-    { 0xa3, 0xe4, 0xa3, 0x92, 0xac, 0x5a, 0xc3, 0xff }}
+  {0x50eda256, 0x4dd2, 0x4c7c, \
+    { 0xba, 0xed, 0x96, 0x98, 0x39, 0x10, 0xaf, 0x9f }}
 
 class NS_NO_VTABLE nsIScriptSecurityManager : public nsIXPCSecurityManager {
  public: 
 
   NS_DEFINE_STATIC_IID_ACCESSOR(NS_ISCRIPTSECURITYMANAGER_IID)
 
-  /* void checkPropertyAccess (in JSContextPtr js_context, in JSObjectPtr js_object, in string class_name, in JSVal property, in PRUint32 action); */
-  NS_IMETHOD CheckPropertyAccess(JSContext * js_context, JSObject * js_object, const char *class_name, jsval property, PRUint32 action) = 0;
+  /**
+     * Checks whether the running script is allowed to access aProperty.
+     */
+  /* [noscript] void checkPropertyAccess (in JSContextPtr aJSContext, in JSObjectPtr aJSObject, in string aClassName, in jsid aProperty, in PRUint32 aAction); */
+  NS_IMETHOD CheckPropertyAccess(JSContext * aJSContext, JSObject * aJSObject, const char *aClassName, ptrdiff_t * aProperty, PRUint32 aAction) = 0;
 
-  /* void checkConnect (in JSContextPtr js_context, in nsIURI target_uri, in string class_name, in string property); */
-  NS_IMETHOD CheckConnect(JSContext * js_context, nsIURI *target_uri, const char *class_name, const char *property) = 0;
-
-  /* void checkLoadURIFromScript (in JSContextPtr cx, in nsIURI uri); */
+  /**
+     * Check that the script currently running in context "cx" can load "uri".
+     *
+     * Will return error code NS_ERROR_DOM_BAD_URI if the load request
+     * should be denied.
+     *
+     * @param cx the JSContext of the script causing the load
+     * @param uri the URI that is being loaded
+     */
+  /* [noscript] void checkLoadURIFromScript (in JSContextPtr cx, in nsIURI uri); */
   NS_IMETHOD CheckLoadURIFromScript(JSContext * cx, nsIURI *uri) = 0;
 
-  /* void checkLoadURIWithPrincipal (in nsIPrincipal principal, in nsIURI uri, in unsigned long flags); */
-  NS_IMETHOD CheckLoadURIWithPrincipal(nsIPrincipal *principal, nsIURI *uri, PRUint32 flags) = 0;
+  /**
+     * Default CheckLoadURI permissions
+     */
+  enum { STANDARD = 0U };
 
-  /* void checkLoadURI (in nsIURI from, in nsIURI uri, in unsigned long flags); */
+  enum { LOAD_IS_AUTOMATIC_DOCUMENT_REPLACEMENT = 1U };
+
+  enum { ALLOW_CHROME = 2U };
+
+  enum { DISALLOW_INHERIT_PRINCIPAL = 4U };
+
+  enum { DISALLOW_SCRIPT_OR_DATA = 4U };
+
+  enum { DISALLOW_SCRIPT = 8U };
+
+  /**
+     * Check that content with principal aPrincipal can load "uri".
+     *
+     * Will return error code NS_ERROR_DOM_BAD_URI if the load request
+     * should be denied.
+     *
+     * @param aPrincipal the principal identifying the actor causing the load
+     * @param uri the URI that is being loaded
+     * @param flags the permission set, see above
+     */
+  /* void checkLoadURIWithPrincipal (in nsIPrincipal aPrincipal, in nsIURI uri, in unsigned long flags); */
+  NS_IMETHOD CheckLoadURIWithPrincipal(nsIPrincipal *aPrincipal, nsIURI *uri, PRUint32 flags) = 0;
+
+  /**
+     * Check that content from "from" can load "uri".
+     *
+     * Will return error code NS_ERROR_DOM_BAD_URI if the load request
+     * should be denied.
+     *
+     * @param from the URI causing the load
+     * @param uri the URI that is being loaded
+     * @param flags the permission set, see above
+     *
+     * @deprecated Use checkLoadURIWithPrincipal instead of this function.
+     */
+  /* [deprecated] void checkLoadURI (in nsIURI from, in nsIURI uri, in unsigned long flags); */
   NS_IMETHOD CheckLoadURI(nsIURI *from, nsIURI *uri, PRUint32 flags) = 0;
 
-  /* void checkLoadURIStr (in AUTF8String from, in AUTF8String uri, in unsigned long flags); */
+  /**
+     * Similar to checkLoadURIWithPrincipal but there are two differences:
+     *
+     * 1) The URI is a string, not a URI object.
+     * 2) This function assumes that the URI may still be subject to fixup (and
+     * hence will check whether fixed-up versions of the URI are allowed to
+     * load as well); if any of the versions of this URI is not allowed, this
+     * function will return error code NS_ERROR_DOM_BAD_URI.
+     */
+  /* void checkLoadURIStrWithPrincipal (in nsIPrincipal aPrincipal, in AUTF8String uri, in unsigned long flags); */
+  NS_IMETHOD CheckLoadURIStrWithPrincipal(nsIPrincipal *aPrincipal, const nsACString & uri, PRUint32 flags) = 0;
+
+  /**
+     * Same as CheckLoadURI but takes string arguments for ease of use
+     * by scripts
+     *
+     * @deprecated Use checkLoadURIStrWithPrincipal instead of this function.
+     */
+  /* [deprecated] void checkLoadURIStr (in AUTF8String from, in AUTF8String uri, in unsigned long flags); */
   NS_IMETHOD CheckLoadURIStr(const nsACString & from, const nsACString & uri, PRUint32 flags) = 0;
 
-  /* void checkFunctionAccess (in JSContextPtr cx, in voidPtr fun_obj, in voidPtr target_obj); */
-  NS_IMETHOD CheckFunctionAccess(JSContext * cx, void * fun_obj, void * target_obj) = 0;
+  /**
+     * Check that the function 'funObj' is allowed to run on 'targetObj'
+     *
+     * Will return error code NS_ERROR_DOM_SECURITY_ERR if the function
+     * should not run
+     *
+     * @param cx The current active JavaScript context.
+     * @param funObj The function trying to run..
+     * @param targetObj The object the function will run on.
+     */
+  /* [noscript] void checkFunctionAccess (in JSContextPtr cx, in voidPtr funObj, in voidPtr targetObj); */
+  NS_IMETHOD CheckFunctionAccess(JSContext * cx, void * funObj, void * targetObj) = 0;
 
-  /* boolean canExecuteScripts (in JSContextPtr cx, in nsIPrincipal principal); */
+  /**
+     * Return true if content from the given principal is allowed to
+     * execute scripts.
+     */
+  /* [noscript] boolean canExecuteScripts (in JSContextPtr cx, in nsIPrincipal principal); */
   NS_IMETHOD CanExecuteScripts(JSContext * cx, nsIPrincipal *principal, PRBool *_retval) = 0;
 
-  /* nsIPrincipal getSubjectPrincipal (); */
+  /**
+     * Return the principal of the innermost frame of the currently
+     * executing script. Will return null if there is no script
+     * currently executing.
+     */
+  /* [noscript] nsIPrincipal getSubjectPrincipal (); */
   NS_IMETHOD GetSubjectPrincipal(nsIPrincipal **_retval) = 0;
 
+  /**
+     * Return the all-powerful system principal.
+     */
   /* nsIPrincipal getSystemPrincipal (); */
   NS_IMETHOD GetSystemPrincipal(nsIPrincipal **_retval) = 0;
 
-  /* nsIPrincipal getCertificatePrincipal (in AUTF8String cert_fingerprint, in AUTF8String subject_name, in AUTF8String pretty_name, in nsISupports cert, in nsIURI uri); */
-  NS_IMETHOD GetCertificatePrincipal(const nsACString & cert_fingerprint, const nsACString & subject_name, const nsACString & pretty_name, nsISupports *cert, nsIURI *uri, nsIPrincipal **_retval) = 0;
+  /**
+     * Return a principal with the specified certificate fingerprint, subject
+     * name (the full name or concatenated set of names of the entity
+     * represented by the certificate), pretty name, certificate, and
+     * codebase URI.  The certificate fingerprint and subject name MUST be
+     * nonempty; otherwise an error will be thrown.  Similarly, aCert must
+     * not be null.
+     */
+  /* [noscript] nsIPrincipal getCertificatePrincipal (in AUTF8String aCertFingerprint, in AUTF8String aSubjectName, in AUTF8String aPrettyName, in nsISupports aCert, in nsIURI aURI); */
+  NS_IMETHOD GetCertificatePrincipal(const nsACString & aCertFingerprint, const nsACString & aSubjectName, const nsACString & aPrettyName, nsISupports *aCert, nsIURI *aURI, nsIPrincipal **_retval) = 0;
 
-  /* nsIPrincipal getCodebasePrincipal (in nsIURI uri); */
-  NS_IMETHOD GetCodebasePrincipal(nsIURI *uri, nsIPrincipal **_retval) = 0;
+  /**
+     * Return a principal that has the same origin as aURI.
+     */
+  /* nsIPrincipal getCodebasePrincipal (in nsIURI aURI); */
+  NS_IMETHOD GetCodebasePrincipal(nsIURI *aURI, nsIPrincipal **_retval) = 0;
 
-  /* short requestCapability (in nsIPrincipal principal, in string capability); */
+  /**
+     * Request that 'capability' can be enabled by scripts or applets
+     * running with 'principal'. Will prompt user if
+     * necessary. Returns nsIPrincipal::ENABLE_GRANTED or
+     * nsIPrincipal::ENABLE_DENIED based on user's choice.
+     */
+  /* [noscript] short requestCapability (in nsIPrincipal principal, in string capability); */
   NS_IMETHOD RequestCapability(nsIPrincipal *principal, const char *capability, PRInt16 *_retval) = 0;
 
+  /**
+     * Return true if the currently executing script has 'capability' enabled.
+     */
   /* boolean isCapabilityEnabled (in string capability); */
   NS_IMETHOD IsCapabilityEnabled(const char *capability, PRBool *_retval) = 0;
 
+  /**
+     * Enable 'capability' in the innermost frame of the currently executing
+     * script.
+     */
   /* void enableCapability (in string capability); */
   NS_IMETHOD EnableCapability(const char *capability) = 0;
 
+  /**
+     * Remove 'capability' from the innermost frame of the currently
+     * executing script. Any setting of 'capability' from enclosing
+     * frames thus comes into effect.
+     */
   /* void revertCapability (in string capability); */
   NS_IMETHOD RevertCapability(const char *capability) = 0;
 
+  /**
+     * Disable 'capability' in the innermost frame of the currently executing
+     * script.
+     */
   /* void disableCapability (in string capability); */
   NS_IMETHOD DisableCapability(const char *capability) = 0;
 
-  /* void setCanEnableCapability (in AUTF8String certificate_id, in string capability, in short can_enable); */
-  NS_IMETHOD SetCanEnableCapability(const nsACString & certificate_id, const char *capability, PRInt16 can_enable) = 0;
+  /**
+     * Allow 'certificateID' to enable 'capability.' Can only be performed
+     * by code signed by the system certificate.
+     */
+  /* void setCanEnableCapability (in AUTF8String certificateFingerprint, in string capability, in short canEnable); */
+  NS_IMETHOD SetCanEnableCapability(const nsACString & certificateFingerprint, const char *capability, PRInt16 canEnable) = 0;
 
-  /* nsIPrincipal getObjectPrincipal (in JSContextPtr cx, in JSObjectPtr obj); */
+  /**
+     * Return the principal of the specified object in the specified context.
+     */
+  /* [noscript] nsIPrincipal getObjectPrincipal (in JSContextPtr cx, in JSObjectPtr obj); */
   NS_IMETHOD GetObjectPrincipal(JSContext * cx, JSObject * obj, nsIPrincipal **_retval) = 0;
 
-  /* boolean subjectPrincipalIsSystem (); */
+  /**
+     * Returns true if the principal of the currently running script is the
+     * system principal, false otherwise.
+     */
+  /* [noscript] boolean subjectPrincipalIsSystem (); */
   NS_IMETHOD SubjectPrincipalIsSystem(PRBool *_retval) = 0;
 
-  /* void checkSameOrigin (in JSContextPtr js_context, in nsIURI target_uri); */
-  NS_IMETHOD CheckSameOrigin(JSContext * js_context, nsIURI *target_uri) = 0;
+  /**
+     * Returns OK if aJSContext and target have the same "origin"
+     * (scheme, host, and port).
+     */
+  /* [noscript] void checkSameOrigin (in JSContextPtr aJSContext, in nsIURI aTargetURI); */
+  NS_IMETHOD CheckSameOrigin(JSContext * aJSContext, nsIURI *aTargetURI) = 0;
 
-  /* void checkSameOriginURI (in nsIURI source_uri, in nsIURI target_uri); */
-  NS_IMETHOD CheckSameOriginURI(nsIURI *source_uri, nsIURI *target_uri) = 0;
+  /**
+     * Returns OK if aSourceURI and target have the same "origin"
+     * (scheme, host, and port).
+     * ReportError flag suppresses error reports for functions that
+     * don't need reporting.
+     */
+  /* void checkSameOriginURI (in nsIURI aSourceURI, in nsIURI aTargetURI, in boolean reportError); */
+  NS_IMETHOD CheckSameOriginURI(nsIURI *aSourceURI, nsIURI *aTargetURI, PRBool reportError) = 0;
 
-  /* void checkSameOriginPrincipal (in nsIPrincipal source_principal, in nsIPrincipal target_principal); */
-  NS_IMETHOD CheckSameOriginPrincipal(nsIPrincipal *source_principal, nsIPrincipal *target_principal) = 0;
-
-  /* nsIPrincipal getPrincipalFromContext (in JSContextPtr cx); */
+  /**
+     * Returns the principal of the global object of the given context, or null
+     * if no global or no principal.
+     */
+  /* [noscript] nsIPrincipal getPrincipalFromContext (in JSContextPtr cx); */
   NS_IMETHOD GetPrincipalFromContext(JSContext * cx, nsIPrincipal **_retval) = 0;
 
-  /* boolean securityCompareURIs (in nsIURI subject_uri, in nsIURI object_uri); */
-  NS_IMETHOD SecurityCompareURIs(nsIURI *subject_uri, nsIURI *object_uri, PRBool *_retval) = 0;
+  /**
+     * Get the principal for the given channel.  This will typically be the
+     * channel owner if there is one, and the codebase principal for the
+     * channel's URI otherwise.  aChannel must not be null.
+     */
+  /* nsIPrincipal getChannelPrincipal (in nsIChannel aChannel); */
+  NS_IMETHOD GetChannelPrincipal(nsIChannel *aChannel, nsIPrincipal **_retval) = 0;
+
+  /**
+     * Check whether a given principal is a system principal.  This allows us
+     * to avoid handing back the system principal to script while allowing
+     * script to check whether a given principal is system.
+     */
+  /* boolean isSystemPrincipal (in nsIPrincipal aPrincipal); */
+  NS_IMETHOD IsSystemPrincipal(nsIPrincipal *aPrincipal, PRBool *_retval) = 0;
+
+  /**
+     * Same as getSubjectPrincipal(), only faster. cx must *never* be
+     * passed null, and it must be the context on the top of the
+     * context stack. Does *not* reference count the returned
+     * principal.
+     */
+  /* [noscript, notxpcom] nsIPrincipal getCxSubjectPrincipal (in JSContextPtr cx); */
+  NS_IMETHOD_(nsIPrincipal *) GetCxSubjectPrincipal(JSContext * cx) = 0;
+
+  /* [noscript, notxpcom] nsIPrincipal getCxSubjectPrincipalAndFrame (in JSContextPtr cx, out JSStackFramePtr fp); */
+  NS_IMETHOD_(nsIPrincipal *) GetCxSubjectPrincipalAndFrame(JSContext * cx, void * * *fp) = 0;
+
+  /**
+     * If no scripted code is running "above" (or called from) fp, then
+     * instead of looking at cx->globalObject, we will return |principal|.
+     * This function only affects |cx|. If someone pushes another context onto
+     * the context stack, then it supersedes this call.
+     * NOTE: If |fp| is non-null popContextPrincipal must be called before fp
+     * has finished executing.
+     *
+     * @param cx The context to clamp.
+     * @param fp The frame pointer to clamp at. May be 'null'.
+     * @param principal The principal to clamp to.
+     */
+  /* [noscript] void pushContextPrincipal (in JSContextPtr cx, in JSStackFramePtr fp, in nsIPrincipal principal); */
+  NS_IMETHOD PushContextPrincipal(JSContext * cx, void * * fp, nsIPrincipal *principal) = 0;
+
+  /**
+     * Removes a clamp set by pushContextPrincipal from cx. This must be
+     * called in a stack-like fashion (e.g., given two contexts |a| and |b|,
+     * it is not legal to do: push(a) push(b) pop(a)).
+     */
+  /* [noscript] void popContextPrincipal (in JSContextPtr cx); */
+  NS_IMETHOD PopContextPrincipal(JSContext * cx) = 0;
 
 };
 
 /* Use this macro when declaring classes that implement this interface. */
 #define NS_DECL_NSISCRIPTSECURITYMANAGER \
-  NS_IMETHOD CheckPropertyAccess(JSContext * js_context, JSObject * js_object, const char *class_name, jsval property, PRUint32 action); \
-  NS_IMETHOD CheckConnect(JSContext * js_context, nsIURI *target_uri, const char *class_name, const char *property); \
+  NS_IMETHOD CheckPropertyAccess(JSContext * aJSContext, JSObject * aJSObject, const char *aClassName, ptrdiff_t * aProperty, PRUint32 aAction); \
   NS_IMETHOD CheckLoadURIFromScript(JSContext * cx, nsIURI *uri); \
-  NS_IMETHOD CheckLoadURIWithPrincipal(nsIPrincipal *principal, nsIURI *uri, PRUint32 flags); \
+  NS_IMETHOD CheckLoadURIWithPrincipal(nsIPrincipal *aPrincipal, nsIURI *uri, PRUint32 flags); \
   NS_IMETHOD CheckLoadURI(nsIURI *from, nsIURI *uri, PRUint32 flags); \
+  NS_IMETHOD CheckLoadURIStrWithPrincipal(nsIPrincipal *aPrincipal, const nsACString & uri, PRUint32 flags); \
   NS_IMETHOD CheckLoadURIStr(const nsACString & from, const nsACString & uri, PRUint32 flags); \
-  NS_IMETHOD CheckFunctionAccess(JSContext * cx, void * fun_obj, void * target_obj); \
+  NS_IMETHOD CheckFunctionAccess(JSContext * cx, void * funObj, void * targetObj); \
   NS_IMETHOD CanExecuteScripts(JSContext * cx, nsIPrincipal *principal, PRBool *_retval); \
   NS_IMETHOD GetSubjectPrincipal(nsIPrincipal **_retval); \
   NS_IMETHOD GetSystemPrincipal(nsIPrincipal **_retval); \
-  NS_IMETHOD GetCertificatePrincipal(const nsACString & cert_fingerprint, const nsACString & subject_name, const nsACString & pretty_name, nsISupports *cert, nsIURI *uri, nsIPrincipal **_retval); \
-  NS_IMETHOD GetCodebasePrincipal(nsIURI *uri, nsIPrincipal **_retval); \
+  NS_IMETHOD GetCertificatePrincipal(const nsACString & aCertFingerprint, const nsACString & aSubjectName, const nsACString & aPrettyName, nsISupports *aCert, nsIURI *aURI, nsIPrincipal **_retval); \
+  NS_IMETHOD GetCodebasePrincipal(nsIURI *aURI, nsIPrincipal **_retval); \
   NS_IMETHOD RequestCapability(nsIPrincipal *principal, const char *capability, PRInt16 *_retval); \
   NS_IMETHOD IsCapabilityEnabled(const char *capability, PRBool *_retval); \
   NS_IMETHOD EnableCapability(const char *capability); \
   NS_IMETHOD RevertCapability(const char *capability); \
   NS_IMETHOD DisableCapability(const char *capability); \
-  NS_IMETHOD SetCanEnableCapability(const nsACString & certificate_id, const char *capability, PRInt16 can_enable); \
+  NS_IMETHOD SetCanEnableCapability(const nsACString & certificateFingerprint, const char *capability, PRInt16 canEnable); \
   NS_IMETHOD GetObjectPrincipal(JSContext * cx, JSObject * obj, nsIPrincipal **_retval); \
   NS_IMETHOD SubjectPrincipalIsSystem(PRBool *_retval); \
-  NS_IMETHOD CheckSameOrigin(JSContext * js_context, nsIURI *target_uri); \
-  NS_IMETHOD CheckSameOriginURI(nsIURI *source_uri, nsIURI *target_uri); \
-  NS_IMETHOD CheckSameOriginPrincipal(nsIPrincipal *source_principal, nsIPrincipal *target_principal); \
+  NS_IMETHOD CheckSameOrigin(JSContext * aJSContext, nsIURI *aTargetURI); \
+  NS_IMETHOD CheckSameOriginURI(nsIURI *aSourceURI, nsIURI *aTargetURI, PRBool reportError); \
   NS_IMETHOD GetPrincipalFromContext(JSContext * cx, nsIPrincipal **_retval); \
-  NS_IMETHOD SecurityCompareURIs(nsIURI *subject_uri, nsIURI *object_uri, PRBool *_retval); 
+  NS_IMETHOD GetChannelPrincipal(nsIChannel *aChannel, nsIPrincipal **_retval); \
+  NS_IMETHOD IsSystemPrincipal(nsIPrincipal *aPrincipal, PRBool *_retval); \
+  NS_IMETHOD_(nsIPrincipal *) GetCxSubjectPrincipal(JSContext * cx); \
+  NS_IMETHOD_(nsIPrincipal *) GetCxSubjectPrincipalAndFrame(JSContext * cx, void * * *fp); \
+  NS_IMETHOD PushContextPrincipal(JSContext * cx, void * * fp, nsIPrincipal *principal); \
+  NS_IMETHOD PopContextPrincipal(JSContext * cx); 
 
 /* Use this macro to declare functions that forward the behavior of this interface to another object. */
 #define NS_FORWARD_NSISCRIPTSECURITYMANAGER(_to) \
-  NS_IMETHOD CheckPropertyAccess(JSContext * js_context, JSObject * js_object, const char *class_name, jsval property, PRUint32 action) { return _to CheckPropertyAccess(js_context, js_object, class_name, property, action); } \
-  NS_IMETHOD CheckConnect(JSContext * js_context, nsIURI *target_uri, const char *class_name, const char *property) { return _to CheckConnect(js_context, target_uri, class_name, property); } \
+  NS_IMETHOD CheckPropertyAccess(JSContext * aJSContext, JSObject * aJSObject, const char *aClassName, ptrdiff_t * aProperty, PRUint32 aAction) { return _to CheckPropertyAccess(aJSContext, aJSObject, aClassName, aProperty, aAction); } \
   NS_IMETHOD CheckLoadURIFromScript(JSContext * cx, nsIURI *uri) { return _to CheckLoadURIFromScript(cx, uri); } \
-  NS_IMETHOD CheckLoadURIWithPrincipal(nsIPrincipal *principal, nsIURI *uri, PRUint32 flags) { return _to CheckLoadURIWithPrincipal(principal, uri, flags); } \
+  NS_IMETHOD CheckLoadURIWithPrincipal(nsIPrincipal *aPrincipal, nsIURI *uri, PRUint32 flags) { return _to CheckLoadURIWithPrincipal(aPrincipal, uri, flags); } \
   NS_IMETHOD CheckLoadURI(nsIURI *from, nsIURI *uri, PRUint32 flags) { return _to CheckLoadURI(from, uri, flags); } \
+  NS_IMETHOD CheckLoadURIStrWithPrincipal(nsIPrincipal *aPrincipal, const nsACString & uri, PRUint32 flags) { return _to CheckLoadURIStrWithPrincipal(aPrincipal, uri, flags); } \
   NS_IMETHOD CheckLoadURIStr(const nsACString & from, const nsACString & uri, PRUint32 flags) { return _to CheckLoadURIStr(from, uri, flags); } \
-  NS_IMETHOD CheckFunctionAccess(JSContext * cx, void * fun_obj, void * target_obj) { return _to CheckFunctionAccess(cx, fun_obj, target_obj); } \
+  NS_IMETHOD CheckFunctionAccess(JSContext * cx, void * funObj, void * targetObj) { return _to CheckFunctionAccess(cx, funObj, targetObj); } \
   NS_IMETHOD CanExecuteScripts(JSContext * cx, nsIPrincipal *principal, PRBool *_retval) { return _to CanExecuteScripts(cx, principal, _retval); } \
   NS_IMETHOD GetSubjectPrincipal(nsIPrincipal **_retval) { return _to GetSubjectPrincipal(_retval); } \
   NS_IMETHOD GetSystemPrincipal(nsIPrincipal **_retval) { return _to GetSystemPrincipal(_retval); } \
-  NS_IMETHOD GetCertificatePrincipal(const nsACString & cert_fingerprint, const nsACString & subject_name, const nsACString & pretty_name, nsISupports *cert, nsIURI *uri, nsIPrincipal **_retval) { return _to GetCertificatePrincipal(cert_fingerprint, subject_name, pretty_name, cert, uri, _retval); } \
-  NS_IMETHOD GetCodebasePrincipal(nsIURI *uri, nsIPrincipal **_retval) { return _to GetCodebasePrincipal(uri, _retval); } \
+  NS_IMETHOD GetCertificatePrincipal(const nsACString & aCertFingerprint, const nsACString & aSubjectName, const nsACString & aPrettyName, nsISupports *aCert, nsIURI *aURI, nsIPrincipal **_retval) { return _to GetCertificatePrincipal(aCertFingerprint, aSubjectName, aPrettyName, aCert, aURI, _retval); } \
+  NS_IMETHOD GetCodebasePrincipal(nsIURI *aURI, nsIPrincipal **_retval) { return _to GetCodebasePrincipal(aURI, _retval); } \
   NS_IMETHOD RequestCapability(nsIPrincipal *principal, const char *capability, PRInt16 *_retval) { return _to RequestCapability(principal, capability, _retval); } \
   NS_IMETHOD IsCapabilityEnabled(const char *capability, PRBool *_retval) { return _to IsCapabilityEnabled(capability, _retval); } \
   NS_IMETHOD EnableCapability(const char *capability) { return _to EnableCapability(capability); } \
   NS_IMETHOD RevertCapability(const char *capability) { return _to RevertCapability(capability); } \
   NS_IMETHOD DisableCapability(const char *capability) { return _to DisableCapability(capability); } \
-  NS_IMETHOD SetCanEnableCapability(const nsACString & certificate_id, const char *capability, PRInt16 can_enable) { return _to SetCanEnableCapability(certificate_id, capability, can_enable); } \
+  NS_IMETHOD SetCanEnableCapability(const nsACString & certificateFingerprint, const char *capability, PRInt16 canEnable) { return _to SetCanEnableCapability(certificateFingerprint, capability, canEnable); } \
   NS_IMETHOD GetObjectPrincipal(JSContext * cx, JSObject * obj, nsIPrincipal **_retval) { return _to GetObjectPrincipal(cx, obj, _retval); } \
   NS_IMETHOD SubjectPrincipalIsSystem(PRBool *_retval) { return _to SubjectPrincipalIsSystem(_retval); } \
-  NS_IMETHOD CheckSameOrigin(JSContext * js_context, nsIURI *target_uri) { return _to CheckSameOrigin(js_context, target_uri); } \
-  NS_IMETHOD CheckSameOriginURI(nsIURI *source_uri, nsIURI *target_uri) { return _to CheckSameOriginURI(source_uri, target_uri); } \
-  NS_IMETHOD CheckSameOriginPrincipal(nsIPrincipal *source_principal, nsIPrincipal *target_principal) { return _to CheckSameOriginPrincipal(source_principal, target_principal); } \
+  NS_IMETHOD CheckSameOrigin(JSContext * aJSContext, nsIURI *aTargetURI) { return _to CheckSameOrigin(aJSContext, aTargetURI); } \
+  NS_IMETHOD CheckSameOriginURI(nsIURI *aSourceURI, nsIURI *aTargetURI, PRBool reportError) { return _to CheckSameOriginURI(aSourceURI, aTargetURI, reportError); } \
   NS_IMETHOD GetPrincipalFromContext(JSContext * cx, nsIPrincipal **_retval) { return _to GetPrincipalFromContext(cx, _retval); } \
-  NS_IMETHOD SecurityCompareURIs(nsIURI *subject_uri, nsIURI *object_uri, PRBool *_retval) { return _to SecurityCompareURIs(subject_uri, object_uri, _retval); } 
+  NS_IMETHOD GetChannelPrincipal(nsIChannel *aChannel, nsIPrincipal **_retval) { return _to GetChannelPrincipal(aChannel, _retval); } \
+  NS_IMETHOD IsSystemPrincipal(nsIPrincipal *aPrincipal, PRBool *_retval) { return _to IsSystemPrincipal(aPrincipal, _retval); } \
+  NS_IMETHOD_(nsIPrincipal *) GetCxSubjectPrincipal(JSContext * cx) { return _to GetCxSubjectPrincipal(cx); } \
+  NS_IMETHOD_(nsIPrincipal *) GetCxSubjectPrincipalAndFrame(JSContext * cx, void * * *fp) { return _to GetCxSubjectPrincipalAndFrame(cx, fp); } \
+  NS_IMETHOD PushContextPrincipal(JSContext * cx, void * * fp, nsIPrincipal *principal) { return _to PushContextPrincipal(cx, fp, principal); } \
+  NS_IMETHOD PopContextPrincipal(JSContext * cx) { return _to PopContextPrincipal(cx); } 
 
 /* Use this macro to declare functions that forward the behavior of this interface to another object in a safe way. */
 #define NS_FORWARD_SAFE_NSISCRIPTSECURITYMANAGER(_to) \
-  NS_IMETHOD CheckPropertyAccess(JSContext * js_context, JSObject * js_object, const char *class_name, jsval property, PRUint32 action) { return !_to ? NS_ERROR_NULL_POINTER : _to->CheckPropertyAccess(js_context, js_object, class_name, property, action); } \
-  NS_IMETHOD CheckConnect(JSContext * js_context, nsIURI *target_uri, const char *class_name, const char *property) { return !_to ? NS_ERROR_NULL_POINTER : _to->CheckConnect(js_context, target_uri, class_name, property); } \
+  NS_IMETHOD CheckPropertyAccess(JSContext * aJSContext, JSObject * aJSObject, const char *aClassName, ptrdiff_t * aProperty, PRUint32 aAction) { return !_to ? NS_ERROR_NULL_POINTER : _to->CheckPropertyAccess(aJSContext, aJSObject, aClassName, aProperty, aAction); } \
   NS_IMETHOD CheckLoadURIFromScript(JSContext * cx, nsIURI *uri) { return !_to ? NS_ERROR_NULL_POINTER : _to->CheckLoadURIFromScript(cx, uri); } \
-  NS_IMETHOD CheckLoadURIWithPrincipal(nsIPrincipal *principal, nsIURI *uri, PRUint32 flags) { return !_to ? NS_ERROR_NULL_POINTER : _to->CheckLoadURIWithPrincipal(principal, uri, flags); } \
+  NS_IMETHOD CheckLoadURIWithPrincipal(nsIPrincipal *aPrincipal, nsIURI *uri, PRUint32 flags) { return !_to ? NS_ERROR_NULL_POINTER : _to->CheckLoadURIWithPrincipal(aPrincipal, uri, flags); } \
   NS_IMETHOD CheckLoadURI(nsIURI *from, nsIURI *uri, PRUint32 flags) { return !_to ? NS_ERROR_NULL_POINTER : _to->CheckLoadURI(from, uri, flags); } \
+  NS_IMETHOD CheckLoadURIStrWithPrincipal(nsIPrincipal *aPrincipal, const nsACString & uri, PRUint32 flags) { return !_to ? NS_ERROR_NULL_POINTER : _to->CheckLoadURIStrWithPrincipal(aPrincipal, uri, flags); } \
   NS_IMETHOD CheckLoadURIStr(const nsACString & from, const nsACString & uri, PRUint32 flags) { return !_to ? NS_ERROR_NULL_POINTER : _to->CheckLoadURIStr(from, uri, flags); } \
-  NS_IMETHOD CheckFunctionAccess(JSContext * cx, void * fun_obj, void * target_obj) { return !_to ? NS_ERROR_NULL_POINTER : _to->CheckFunctionAccess(cx, fun_obj, target_obj); } \
+  NS_IMETHOD CheckFunctionAccess(JSContext * cx, void * funObj, void * targetObj) { return !_to ? NS_ERROR_NULL_POINTER : _to->CheckFunctionAccess(cx, funObj, targetObj); } \
   NS_IMETHOD CanExecuteScripts(JSContext * cx, nsIPrincipal *principal, PRBool *_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->CanExecuteScripts(cx, principal, _retval); } \
   NS_IMETHOD GetSubjectPrincipal(nsIPrincipal **_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetSubjectPrincipal(_retval); } \
   NS_IMETHOD GetSystemPrincipal(nsIPrincipal **_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetSystemPrincipal(_retval); } \
-  NS_IMETHOD GetCertificatePrincipal(const nsACString & cert_fingerprint, const nsACString & subject_name, const nsACString & pretty_name, nsISupports *cert, nsIURI *uri, nsIPrincipal **_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetCertificatePrincipal(cert_fingerprint, subject_name, pretty_name, cert, uri, _retval); } \
-  NS_IMETHOD GetCodebasePrincipal(nsIURI *uri, nsIPrincipal **_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetCodebasePrincipal(uri, _retval); } \
+  NS_IMETHOD GetCertificatePrincipal(const nsACString & aCertFingerprint, const nsACString & aSubjectName, const nsACString & aPrettyName, nsISupports *aCert, nsIURI *aURI, nsIPrincipal **_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetCertificatePrincipal(aCertFingerprint, aSubjectName, aPrettyName, aCert, aURI, _retval); } \
+  NS_IMETHOD GetCodebasePrincipal(nsIURI *aURI, nsIPrincipal **_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetCodebasePrincipal(aURI, _retval); } \
   NS_IMETHOD RequestCapability(nsIPrincipal *principal, const char *capability, PRInt16 *_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->RequestCapability(principal, capability, _retval); } \
   NS_IMETHOD IsCapabilityEnabled(const char *capability, PRBool *_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->IsCapabilityEnabled(capability, _retval); } \
   NS_IMETHOD EnableCapability(const char *capability) { return !_to ? NS_ERROR_NULL_POINTER : _to->EnableCapability(capability); } \
   NS_IMETHOD RevertCapability(const char *capability) { return !_to ? NS_ERROR_NULL_POINTER : _to->RevertCapability(capability); } \
   NS_IMETHOD DisableCapability(const char *capability) { return !_to ? NS_ERROR_NULL_POINTER : _to->DisableCapability(capability); } \
-  NS_IMETHOD SetCanEnableCapability(const nsACString & certificate_id, const char *capability, PRInt16 can_enable) { return !_to ? NS_ERROR_NULL_POINTER : _to->SetCanEnableCapability(certificate_id, capability, can_enable); } \
+  NS_IMETHOD SetCanEnableCapability(const nsACString & certificateFingerprint, const char *capability, PRInt16 canEnable) { return !_to ? NS_ERROR_NULL_POINTER : _to->SetCanEnableCapability(certificateFingerprint, capability, canEnable); } \
   NS_IMETHOD GetObjectPrincipal(JSContext * cx, JSObject * obj, nsIPrincipal **_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetObjectPrincipal(cx, obj, _retval); } \
   NS_IMETHOD SubjectPrincipalIsSystem(PRBool *_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->SubjectPrincipalIsSystem(_retval); } \
-  NS_IMETHOD CheckSameOrigin(JSContext * js_context, nsIURI *target_uri) { return !_to ? NS_ERROR_NULL_POINTER : _to->CheckSameOrigin(js_context, target_uri); } \
-  NS_IMETHOD CheckSameOriginURI(nsIURI *source_uri, nsIURI *target_uri) { return !_to ? NS_ERROR_NULL_POINTER : _to->CheckSameOriginURI(source_uri, target_uri); } \
-  NS_IMETHOD CheckSameOriginPrincipal(nsIPrincipal *source_principal, nsIPrincipal *target_principal) { return !_to ? NS_ERROR_NULL_POINTER : _to->CheckSameOriginPrincipal(source_principal, target_principal); } \
+  NS_IMETHOD CheckSameOrigin(JSContext * aJSContext, nsIURI *aTargetURI) { return !_to ? NS_ERROR_NULL_POINTER : _to->CheckSameOrigin(aJSContext, aTargetURI); } \
+  NS_IMETHOD CheckSameOriginURI(nsIURI *aSourceURI, nsIURI *aTargetURI, PRBool reportError) { return !_to ? NS_ERROR_NULL_POINTER : _to->CheckSameOriginURI(aSourceURI, aTargetURI, reportError); } \
   NS_IMETHOD GetPrincipalFromContext(JSContext * cx, nsIPrincipal **_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetPrincipalFromContext(cx, _retval); } \
-  NS_IMETHOD SecurityCompareURIs(nsIURI *subject_uri, nsIURI *object_uri, PRBool *_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->SecurityCompareURIs(subject_uri, object_uri, _retval); } 
+  NS_IMETHOD GetChannelPrincipal(nsIChannel *aChannel, nsIPrincipal **_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetChannelPrincipal(aChannel, _retval); } \
+  NS_IMETHOD IsSystemPrincipal(nsIPrincipal *aPrincipal, PRBool *_retval) { return !_to ? NS_ERROR_NULL_POINTER : _to->IsSystemPrincipal(aPrincipal, _retval); } \
+  NS_IMETHOD_(nsIPrincipal *) GetCxSubjectPrincipal(JSContext * cx) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetCxSubjectPrincipal(cx); } \
+  NS_IMETHOD_(nsIPrincipal *) GetCxSubjectPrincipalAndFrame(JSContext * cx, void * * *fp) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetCxSubjectPrincipalAndFrame(cx, fp); } \
+  NS_IMETHOD PushContextPrincipal(JSContext * cx, void * * fp, nsIPrincipal *principal) { return !_to ? NS_ERROR_NULL_POINTER : _to->PushContextPrincipal(cx, fp, principal); } \
+  NS_IMETHOD PopContextPrincipal(JSContext * cx) { return !_to ? NS_ERROR_NULL_POINTER : _to->PopContextPrincipal(cx); } 
 
 #if 0
 /* Use the code below as a template for the implementation class for this interface. */
@@ -21501,55 +21897,55 @@ nsScriptSecurityManager::~nsScriptSecurityManager()
   /* destructor code */
 }
 
-/* void checkPropertyAccess (in JSContextPtr js_context, in JSObjectPtr js_object, in string class_name, in JSVal property, in PRUint32 action); */
-NS_IMETHODIMP nsScriptSecurityManager::CheckPropertyAccess(JSContext * js_context, JSObject * js_object, const char *class_name, jsval property, PRUint32 action)
+/* [noscript] void checkPropertyAccess (in JSContextPtr aJSContext, in JSObjectPtr aJSObject, in string aClassName, in jsid aProperty, in PRUint32 aAction); */
+NS_IMETHODIMP nsScriptSecurityManager::CheckPropertyAccess(JSContext * aJSContext, JSObject * aJSObject, const char *aClassName, ptrdiff_t * aProperty, PRUint32 aAction)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* void checkConnect (in JSContextPtr js_context, in nsIURI target_uri, in string class_name, in string property); */
-NS_IMETHODIMP nsScriptSecurityManager::CheckConnect(JSContext * js_context, nsIURI *target_uri, const char *class_name, const char *property)
-{
-    return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-/* void checkLoadURIFromScript (in JSContextPtr cx, in nsIURI uri); */
+/* [noscript] void checkLoadURIFromScript (in JSContextPtr cx, in nsIURI uri); */
 NS_IMETHODIMP nsScriptSecurityManager::CheckLoadURIFromScript(JSContext * cx, nsIURI *uri)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* void checkLoadURIWithPrincipal (in nsIPrincipal principal, in nsIURI uri, in unsigned long flags); */
-NS_IMETHODIMP nsScriptSecurityManager::CheckLoadURIWithPrincipal(nsIPrincipal *principal, nsIURI *uri, PRUint32 flags)
+/* void checkLoadURIWithPrincipal (in nsIPrincipal aPrincipal, in nsIURI uri, in unsigned long flags); */
+NS_IMETHODIMP nsScriptSecurityManager::CheckLoadURIWithPrincipal(nsIPrincipal *aPrincipal, nsIURI *uri, PRUint32 flags)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* void checkLoadURI (in nsIURI from, in nsIURI uri, in unsigned long flags); */
+/* [deprecated] void checkLoadURI (in nsIURI from, in nsIURI uri, in unsigned long flags); */
 NS_IMETHODIMP nsScriptSecurityManager::CheckLoadURI(nsIURI *from, nsIURI *uri, PRUint32 flags)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* void checkLoadURIStr (in AUTF8String from, in AUTF8String uri, in unsigned long flags); */
+/* void checkLoadURIStrWithPrincipal (in nsIPrincipal aPrincipal, in AUTF8String uri, in unsigned long flags); */
+NS_IMETHODIMP nsScriptSecurityManager::CheckLoadURIStrWithPrincipal(nsIPrincipal *aPrincipal, const nsACString & uri, PRUint32 flags)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* [deprecated] void checkLoadURIStr (in AUTF8String from, in AUTF8String uri, in unsigned long flags); */
 NS_IMETHODIMP nsScriptSecurityManager::CheckLoadURIStr(const nsACString & from, const nsACString & uri, PRUint32 flags)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* void checkFunctionAccess (in JSContextPtr cx, in voidPtr fun_obj, in voidPtr target_obj); */
-NS_IMETHODIMP nsScriptSecurityManager::CheckFunctionAccess(JSContext * cx, void * fun_obj, void * target_obj)
+/* [noscript] void checkFunctionAccess (in JSContextPtr cx, in voidPtr funObj, in voidPtr targetObj); */
+NS_IMETHODIMP nsScriptSecurityManager::CheckFunctionAccess(JSContext * cx, void * funObj, void * targetObj)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* boolean canExecuteScripts (in JSContextPtr cx, in nsIPrincipal principal); */
+/* [noscript] boolean canExecuteScripts (in JSContextPtr cx, in nsIPrincipal principal); */
 NS_IMETHODIMP nsScriptSecurityManager::CanExecuteScripts(JSContext * cx, nsIPrincipal *principal, PRBool *_retval)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* nsIPrincipal getSubjectPrincipal (); */
+/* [noscript] nsIPrincipal getSubjectPrincipal (); */
 NS_IMETHODIMP nsScriptSecurityManager::GetSubjectPrincipal(nsIPrincipal **_retval)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
@@ -21561,19 +21957,19 @@ NS_IMETHODIMP nsScriptSecurityManager::GetSystemPrincipal(nsIPrincipal **_retval
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* nsIPrincipal getCertificatePrincipal (in AUTF8String cert_fingerprint, in AUTF8String subject_name, in AUTF8String pretty_name, in nsISupports cert, in nsIURI uri); */
-NS_IMETHODIMP nsScriptSecurityManager::GetCertificatePrincipal(const nsACString & cert_fingerprint, const nsACString & subject_name, const nsACString & pretty_name, nsISupports *cert, nsIURI *uri, nsIPrincipal **_retval)
+/* [noscript] nsIPrincipal getCertificatePrincipal (in AUTF8String aCertFingerprint, in AUTF8String aSubjectName, in AUTF8String aPrettyName, in nsISupports aCert, in nsIURI aURI); */
+NS_IMETHODIMP nsScriptSecurityManager::GetCertificatePrincipal(const nsACString & aCertFingerprint, const nsACString & aSubjectName, const nsACString & aPrettyName, nsISupports *aCert, nsIURI *aURI, nsIPrincipal **_retval)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* nsIPrincipal getCodebasePrincipal (in nsIURI uri); */
-NS_IMETHODIMP nsScriptSecurityManager::GetCodebasePrincipal(nsIURI *uri, nsIPrincipal **_retval)
+/* nsIPrincipal getCodebasePrincipal (in nsIURI aURI); */
+NS_IMETHODIMP nsScriptSecurityManager::GetCodebasePrincipal(nsIURI *aURI, nsIPrincipal **_retval)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* short requestCapability (in nsIPrincipal principal, in string capability); */
+/* [noscript] short requestCapability (in nsIPrincipal principal, in string capability); */
 NS_IMETHODIMP nsScriptSecurityManager::RequestCapability(nsIPrincipal *principal, const char *capability, PRInt16 *_retval)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
@@ -21603,50 +21999,74 @@ NS_IMETHODIMP nsScriptSecurityManager::DisableCapability(const char *capability)
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* void setCanEnableCapability (in AUTF8String certificate_id, in string capability, in short can_enable); */
-NS_IMETHODIMP nsScriptSecurityManager::SetCanEnableCapability(const nsACString & certificate_id, const char *capability, PRInt16 can_enable)
+/* void setCanEnableCapability (in AUTF8String certificateFingerprint, in string capability, in short canEnable); */
+NS_IMETHODIMP nsScriptSecurityManager::SetCanEnableCapability(const nsACString & certificateFingerprint, const char *capability, PRInt16 canEnable)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* nsIPrincipal getObjectPrincipal (in JSContextPtr cx, in JSObjectPtr obj); */
+/* [noscript] nsIPrincipal getObjectPrincipal (in JSContextPtr cx, in JSObjectPtr obj); */
 NS_IMETHODIMP nsScriptSecurityManager::GetObjectPrincipal(JSContext * cx, JSObject * obj, nsIPrincipal **_retval)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* boolean subjectPrincipalIsSystem (); */
+/* [noscript] boolean subjectPrincipalIsSystem (); */
 NS_IMETHODIMP nsScriptSecurityManager::SubjectPrincipalIsSystem(PRBool *_retval)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* void checkSameOrigin (in JSContextPtr js_context, in nsIURI target_uri); */
-NS_IMETHODIMP nsScriptSecurityManager::CheckSameOrigin(JSContext * js_context, nsIURI *target_uri)
+/* [noscript] void checkSameOrigin (in JSContextPtr aJSContext, in nsIURI aTargetURI); */
+NS_IMETHODIMP nsScriptSecurityManager::CheckSameOrigin(JSContext * aJSContext, nsIURI *aTargetURI)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* void checkSameOriginURI (in nsIURI source_uri, in nsIURI target_uri); */
-NS_IMETHODIMP nsScriptSecurityManager::CheckSameOriginURI(nsIURI *source_uri, nsIURI *target_uri)
+/* void checkSameOriginURI (in nsIURI aSourceURI, in nsIURI aTargetURI, in boolean reportError); */
+NS_IMETHODIMP nsScriptSecurityManager::CheckSameOriginURI(nsIURI *aSourceURI, nsIURI *aTargetURI, PRBool reportError)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* void checkSameOriginPrincipal (in nsIPrincipal source_principal, in nsIPrincipal target_principal); */
-NS_IMETHODIMP nsScriptSecurityManager::CheckSameOriginPrincipal(nsIPrincipal *source_principal, nsIPrincipal *target_principal)
-{
-    return NS_ERROR_NOT_IMPLEMENTED;
-}
-
-/* nsIPrincipal getPrincipalFromContext (in JSContextPtr cx); */
+/* [noscript] nsIPrincipal getPrincipalFromContext (in JSContextPtr cx); */
 NS_IMETHODIMP nsScriptSecurityManager::GetPrincipalFromContext(JSContext * cx, nsIPrincipal **_retval)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
 
-/* boolean securityCompareURIs (in nsIURI subject_uri, in nsIURI object_uri); */
-NS_IMETHODIMP nsScriptSecurityManager::SecurityCompareURIs(nsIURI *subject_uri, nsIURI *object_uri, PRBool *_retval)
+/* nsIPrincipal getChannelPrincipal (in nsIChannel aChannel); */
+NS_IMETHODIMP nsScriptSecurityManager::GetChannelPrincipal(nsIChannel *aChannel, nsIPrincipal **_retval)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* boolean isSystemPrincipal (in nsIPrincipal aPrincipal); */
+NS_IMETHODIMP nsScriptSecurityManager::IsSystemPrincipal(nsIPrincipal *aPrincipal, PRBool *_retval)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* [noscript, notxpcom] nsIPrincipal getCxSubjectPrincipal (in JSContextPtr cx); */
+NS_IMETHODIMP_(nsIPrincipal *) nsScriptSecurityManager::GetCxSubjectPrincipal(JSContext * cx)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* [noscript, notxpcom] nsIPrincipal getCxSubjectPrincipalAndFrame (in JSContextPtr cx, out JSStackFramePtr fp); */
+NS_IMETHODIMP_(nsIPrincipal *) nsScriptSecurityManager::GetCxSubjectPrincipalAndFrame(JSContext * cx, void * * *fp)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* [noscript] void pushContextPrincipal (in JSContextPtr cx, in JSStackFramePtr fp, in nsIPrincipal principal); */
+NS_IMETHODIMP nsScriptSecurityManager::PushContextPrincipal(JSContext * cx, void * * fp, nsIPrincipal *principal)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* [noscript] void popContextPrincipal (in JSContextPtr cx); */
+NS_IMETHODIMP nsScriptSecurityManager::PopContextPrincipal(JSContext * cx)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }
@@ -23784,6 +24204,92 @@ NS_IMETHODIMP nsWebBrowserStream::AppendToStream(const PRUint8 *aData, PRUint32 
 NS_IMETHODIMP nsWebBrowserStream::CloseStream()
 {
     return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+/* End of implementation class template. */
+#endif
+
+
+/* starting interface:    nsIProgrammingLanguage */
+#define NS_IPROGRAMMINGLANGUAGE_IID_STR "ea604e90-40ba-11d5-90bb-0010a4e73d9a"
+
+#define NS_IPROGRAMMINGLANGUAGE_IID \
+  {0xea604e90, 0x40ba, 0x11d5, \
+    { 0x90, 0xbb, 0x00, 0x10, 0xa4, 0xe7, 0x3d, 0x9a }}
+
+class NS_NO_VTABLE nsIProgrammingLanguage : public nsISupports {
+ public: 
+
+  NS_DEFINE_STATIC_IID_ACCESSOR(NS_IPROGRAMMINGLANGUAGE_IID)
+
+  /**
+     * Identifiers for programming languages.
+     */
+  enum { UNKNOWN = 0U };
+
+  enum { CPLUSPLUS = 1U };
+
+  enum { JAVASCRIPT = 2U };
+
+  enum { PYTHON = 3U };
+
+  enum { PERL = 4U };
+
+  enum { JAVA = 5U };
+
+  enum { ZX81_BASIC = 6U };
+
+  enum { JAVASCRIPT2 = 7U };
+
+  enum { RUBY = 8U };
+
+  enum { PHP = 9U };
+
+  enum { TCL = 10U };
+
+  enum { MAX = 10U };
+
+};
+
+/* Use this macro when declaring classes that implement this interface. */
+#define NS_DECL_NSIPROGRAMMINGLANGUAGE \
+
+/* Use this macro to declare functions that forward the behavior of this interface to another object. */
+#define NS_FORWARD_NSIPROGRAMMINGLANGUAGE(_to) \
+
+/* Use this macro to declare functions that forward the behavior of this interface to another object in a safe way. */
+#define NS_FORWARD_SAFE_NSIPROGRAMMINGLANGUAGE(_to) \
+
+#if 0
+/* Use the code below as a template for the implementation class for this interface. */
+
+/* Header file */
+class nsProgrammingLanguage : public nsIProgrammingLanguage
+{
+public:
+  NS_DECL_ISUPPORTS
+  NS_DECL_NSIPROGRAMMINGLANGUAGE
+
+  nsProgrammingLanguage();
+
+private:
+  ~nsProgrammingLanguage();
+
+protected:
+  /* additional members */
+};
+
+/* Implementation file */
+NS_IMPL_ISUPPORTS1(nsProgrammingLanguage, nsIProgrammingLanguage)
+
+nsProgrammingLanguage::nsProgrammingLanguage()
+{
+  /* member initializers and constructor code */
+}
+
+nsProgrammingLanguage::~nsProgrammingLanguage()
+{
+  /* destructor code */
 }
 
 /* End of implementation class template. */
