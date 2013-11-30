@@ -49,6 +49,8 @@ DEFINE_EVENT_TYPE(wxEVT_WEB_LEFTUP)
 DEFINE_EVENT_TYPE(wxEVT_WEB_MIDDLEUP)
 DEFINE_EVENT_TYPE(wxEVT_WEB_RIGHTUP)
 DEFINE_EVENT_TYPE(wxEVT_WEB_LEFTDCLICK)
+DEFINE_EVENT_TYPE(wxEVT_WEB_MOUSEOVER)
+DEFINE_EVENT_TYPE(wxEVT_WEB_MOUSEOUT)
 DEFINE_EVENT_TYPE(wxEVT_WEB_DRAGDROP)
 DEFINE_EVENT_TYPE(wxEVT_WEB_INITDOWNLOAD)
 DEFINE_EVENT_TYPE(wxEVT_WEB_SHOULDHANDLECONTENT)
@@ -262,6 +264,18 @@ void BrowserChrome::ChromeInit()
                                             this,
                                             PR_TRUE,
                                             PR_FALSE, 2);
+
+    res = m_wnd->m_ptrs->m_event_target->AddEventListener(
+                                            NS_LITERAL_STRING("mouseover"),
+                                            this,
+                                            PR_TRUE,
+                                            PR_FALSE, 2);
+
+    res = m_wnd->m_ptrs->m_event_target->AddEventListener(
+                                            NS_LITERAL_STRING("mouseout"),
+                                            this,
+                                            PR_TRUE,
+                                            PR_FALSE, 2);
                                                    
     res = m_wnd->m_ptrs->m_event_target->AddEventListener(
                                             NS_LITERAL_STRING("dblclick"),
@@ -300,6 +314,16 @@ void BrowserChrome::ChromeUninit()
 
     res = m_wnd->m_ptrs->m_event_target->RemoveEventListener(
                                             NS_LITERAL_STRING("mouseup"),
+                                            this,
+                                            PR_TRUE);
+    
+    res = m_wnd->m_ptrs->m_event_target->RemoveEventListener(
+                                            NS_LITERAL_STRING("mouseover"),
+                                            this,
+                                            PR_TRUE);
+
+    res = m_wnd->m_ptrs->m_event_target->RemoveEventListener(
+                                            NS_LITERAL_STRING("mouseout"),
                                             this,
                                             PR_TRUE);
                                                    
@@ -837,6 +861,8 @@ NS_IMETHODIMP BrowserChrome::HandleEvent(nsIDOMEvent* evt)
 
     if (type == wxT("mousedown") ||
         type == wxT("mouseup") ||
+        type == wxT("mouseover") ||
+        type == wxT("mouseout") ||
         type == wxT("dblclick") ||
         type == wxT("dragdrop"))
     {
@@ -877,6 +903,14 @@ NS_IMETHODIMP BrowserChrome::HandleEvent(nsIDOMEvent* evt)
                 case 1: evtid = wxEVT_WEB_MIDDLEUP; break;
                 case 2: evtid = wxEVT_WEB_RIGHTUP; break;
             }
+        }
+         else if (type == wxT("mouseover"))
+        {
+            evtid = wxEVT_WEB_MOUSEOVER;
+        }
+         else if (type == wxT("mouseout"))
+        {
+            evtid = wxEVT_WEB_MOUSEOUT;
         }
          else if (type == wxT("dblclick"))
         {
