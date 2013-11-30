@@ -935,11 +935,7 @@ NS_IMETHODIMP BrowserChrome::HandleEvent(nsIDOMEvent* evt)
         // now get the dom document
         ns_smartptr<nsIDOMDocument> dom_doc;
         element->GetOwnerDocument(&dom_doc.p);
-        ns_smartptr<nsIDOM3Document> dom3_doc = dom_doc;
-        if (!dom3_doc)
-            return NS_OK;
-        
-        dom3_doc->GetDocumentURI(value);
+        dom_doc->GetDocumentURI(value);
         spec = ns2wx(value);
         
         nsEmbedCString chref;

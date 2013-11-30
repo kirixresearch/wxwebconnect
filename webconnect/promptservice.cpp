@@ -397,7 +397,6 @@ END_EVENT_TABLE()
 
 class PromptService : public nsIPrompt,
                       public nsIPromptService2,
-                      public nsIBadCertListener,
                       public nsIBadCertListener2,
                       public nsIAuthPrompt2
 {
@@ -411,7 +410,6 @@ public:
     NS_DECL_ISUPPORTS
     NS_DECL_NSIPROMPTSERVICE
     NS_DECL_NSIPROMPTSERVICE2
-    NS_DECL_NSIBADCERTLISTENER
     NS_DECL_NSIBADCERTLISTENER2
     NS_DECL_NSIAUTHPROMPT2
     
@@ -473,7 +471,6 @@ NS_INTERFACE_MAP_BEGIN(PromptService)
     NS_INTERFACE_MAP_ENTRY(nsIPrompt)
     NS_INTERFACE_MAP_ENTRY(nsIPromptService)
     NS_INTERFACE_MAP_ENTRY(nsIPromptService2)
-    NS_INTERFACE_MAP_ENTRY(nsIBadCertListener)
     NS_INTERFACE_MAP_ENTRY(nsIBadCertListener2)
     NS_INTERFACE_MAP_ENTRY(nsIAuthPrompt2)
 NS_INTERFACE_MAP_END
@@ -667,35 +664,6 @@ NS_IMETHODIMP PromptService::Select(nsIDOMWindow* parent,
     return NS_OK;
 }
 
-NS_IMETHODIMP PromptService::ConfirmUnknownIssuer(
-                                    nsIInterfaceRequestor* socketInfo,
-                                    nsIX509Cert* cert,
-                                    PRInt16* certAddType,
-                                    PRBool* retval)
-{
-    if (wxWebControl::GetIgnoreCertErrors())
-    {
-        *retval = PR_TRUE;
-        return NS_OK;
-    }
-
-    int res = wxMessageBox(
-        _("The requested web page is certified by an unknown authority.  Would you like to continue?"),
-        _("Website Certified by an Unknown Authority"),
-        wxICON_QUESTION | wxCENTER | wxYES_NO,
-        NULL);
-        
-    if (res != wxYES)
-    {
-        *retval = PR_FALSE;
-        return NS_OK;
-    }
-        
-    *certAddType = nsIBadCertListener::ADD_TRUSTED_FOR_SESSION;
-    *retval = PR_TRUE;
-    return NS_OK;
-}
-
 NS_IMETHODIMP PromptService::PromptAuth(nsIDOMWindow* parent,
                                         nsIChannel* channel,
                                         PRUint32 level,
@@ -746,69 +714,6 @@ NS_IMETHODIMP PromptService::AsyncPromptAuth(nsIDOMWindow* parent,
 }
 
 
-
-NS_IMETHODIMP PromptService::ConfirmMismatchDomain(
-                                    nsIInterfaceRequestor* socketInfo,
-                                    const nsACString& targetURL,
-                                    nsIX509Cert *cert,
-                                    PRBool* retval)
-{
-    if (wxWebControl::GetIgnoreCertErrors())
-    {
-        *retval = PR_TRUE;
-        return NS_OK;
-    }
-
-    int res = wxMessageBox(
-        _("The requested web page uses a certificate which does not match the domain.  Would you like to continue?"),
-        _("Domain Mismatch"),
-        wxICON_QUESTION | wxCENTER | wxYES_NO,
-        NULL);
-        
-    if (res != wxYES)
-    {
-        *retval = PR_FALSE;
-        return NS_OK;
-    }
-    
-    *retval = PR_TRUE;
-    return NS_OK;
-}
-
-NS_IMETHODIMP PromptService::ConfirmCertExpired(
-                                    nsIInterfaceRequestor* socketInfo,
-                                    nsIX509Cert* cert,
-                                    PRBool* retval)
-{
-    if (wxWebControl::GetIgnoreCertErrors())
-    {
-        *retval = PR_TRUE;
-        return NS_OK;
-    }
-
-    int res = wxMessageBox(
-        _("The requested web page uses a certificate which has expired.  Would you like to continue?"),
-        _("Certificate Expired"),
-        wxICON_QUESTION | wxCENTER | wxYES_NO,
-        NULL);
-    
-    if (res != wxYES)
-    {
-        *retval = PR_FALSE;
-        return NS_OK;
-    }
-    
-    *retval = PR_TRUE;
-    return NS_OK;
-}
-
-NS_IMETHODIMP PromptService::NotifyCrlNextupdate(
-                                    nsIInterfaceRequestor* socketInfo,
-                                    const nsACString& targetURL,
-                                    nsIX509Cert* cert)
-{
-    return NS_OK;
-}
 
 NS_IMETHODIMP PromptService::NotifyCertProblem(
                                     nsIInterfaceRequestor *socket_info,

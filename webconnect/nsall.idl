@@ -267,7 +267,7 @@ interface nsILocalFile : nsIFile
 
 
 ///////////////////////////////////////////////////////////////////////////////
-//  nsIBadCertListener
+//  nsIBadCertListener2
 ///////////////////////////////////////////////////////////////////////////////
 
 
@@ -293,22 +293,6 @@ interface nsISSLStatus : nsISupports
     readonly attribute boolean isNotValidAtThisTime;
     readonly attribute boolean isUntrusted;
 };
-
-
-
-[scriptable, object, uuid(86960956-edb0-11d4-998b-00b0d02354a0)]
-interface nsIBadCertListener : nsISupports
-{
-    const short UNINIT_ADD_FLAG = -1;
-    const short ADD_TRUSTED_FOR_SESSION = 1;
-    const short ADD_TRUSTED_PERMANENTLY = 2;
-
-    boolean confirmUnknownIssuer(in nsIInterfaceRequestor socketInfo, in nsIX509Cert cert, out short certAddType);
-    boolean confirmMismatchDomain(in nsIInterfaceRequestor socketInfo, in AUTF8String targetURL, in nsIX509Cert cert);
-    boolean confirmCertExpired(in nsIInterfaceRequestor socketInfo, in nsIX509Cert cert);
-    void notifyCrlNextupdate(in nsIInterfaceRequestor socketInfo, in AUTF8String targetURL, in nsIX509Cert cert);
-};
-
 
 
 [scriptable, uuid(2c3d268c-ad82-49f3-99aa-e9ffddd7a0dc)]
@@ -1155,71 +1139,6 @@ interface nsIDOMNode : nsISupports
 };
 
 
-
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////
-//  nsIDOM3Node
-///////////////////////////////////////////////////////////////////////////////
-
-
-interface nsIDOMNode;
-interface DOMException;
-interface nsIVariant;
-interface nsIDOMUserDataHandler;
-
-[scriptable, uuid(29fb2a18-1dd2-11b2-8dd9-a6fd5d5ad12f)]
-interface nsIDOM3Node : nsISupports
-{
-    const unsigned short DOCUMENT_POSITION_DISCONNECTED = 0x01;
-    const unsigned short DOCUMENT_POSITION_PRECEDING = 0x02;
-    const unsigned short DOCUMENT_POSITION_FOLLOWING = 0x04;
-    const unsigned short DOCUMENT_POSITION_CONTAINS = 0x08;
-    const unsigned short DOCUMENT_POSITION_CONTAINED_BY = 0x10;
-    const unsigned short DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 0x20;
-    
-    readonly attribute DOMString baseURI;
-
-    unsigned short compareDocumentPosition(in nsIDOMNode other) raises(DOMException);
-
-    attribute DOMString textContent;
-
-    boolean isSameNode(in nsIDOMNode other);
-    DOMString lookupPrefix(in DOMString namespaceURI);
-    boolean isDefaultNamespace(in DOMString namespaceURI);
-    DOMString lookupNamespaceURI(in DOMString prefix);
-    boolean isEqualNode(in nsIDOMNode arg);
-    nsISupports getFeature(in DOMString feature, in DOMString xversion);
-    nsIVariant setUserData(in DOMString key, in nsIVariant data, in nsIDOMUserDataHandler handler);
-    nsIVariant getUserData(in DOMString key);
-};
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////
-//  nsIDOM3Document
-///////////////////////////////////////////////////////////////////////////////
-
-
-interface nsIDOMDOMConfiguration;
-
-[scriptable, uuid(2e0e9ea1-72ab-4d9e-bdeb-ca64e1abeba4)]
-interface nsIDOM3Document : nsIDOM3Node
-{
-    readonly attribute DOMString inputEncoding;
-    readonly attribute DOMString xmlEncoding;
-    attribute boolean xmlStandalone;
-    attribute DOMString xmlVersion;
-    attribute boolean strictErrorChecking;
-    attribute DOMString documentURI;
-    nsIDOMNode adoptNode(in nsIDOMNode xsource) raises(DOMException);
-    readonly attribute nsIDOMDOMConfiguration domConfig;
-    void normalizeDocument();
-    nsIDOMNode renameNode(in nsIDOMNode node, in DOMString namespaceURI, in DOMString qualifiedName) raises(DOMException);
-};
 
 
 
