@@ -99,6 +99,9 @@ typedef nsresult (PR_CALLBACK *GetFrozenFunctionsFunc)(XPCOMFunctionTable *func_
                                                        const char* path);
 
 
+JS_ValueToStringFunc JS_ValueToStringImpl;
+JS_EncodeStringFunc JS_EncodeStringImpl;
+JS_freeFunc JS_freeImpl;
 
 
 #ifdef __WXMSW__
@@ -153,10 +156,31 @@ static void GetDependentLibraryList(const char* xpcom_dll_path, wxArrayString& a
 
 
 #ifdef __WXMSW__
+    typedef HMODULE HandleType;
+    #define LoadFunctionFromLibrary(handle, function_name) GetProcAddress(handle, function_name);
+    #define LoadLibraryImpl(dll_path) LoadLibraryExA(dll_path, 0, LOAD_WITH_ALTERED_SEARCH_PATH);
+#else
+    typedef void* HandleType;
+    #define LoadFunctionFromLibrary(handle, function_name) dlsym(handle, function_name);
+    #define LoadLibraryImpl(dll_path) dlopen(dll_path, RTLD_GLOBAL | RTLD_LAZY);
+#endif
+
+#define GetFunctionImpl(handle, function_name) \
+{   \
+    function_name##Impl = (function_name##Func)LoadFunctionFromLibrary(handle, #function_name); \
+    if (!function_name##Impl) \
+    { \
+        fprintf(stderr, "Unable to find %sImpl.\n", #function_name); \
+        return false; \
+    } \
+}
+
+#ifdef __WXMSW__
 nsresult XPCOMGlueStartup(const char* xpcom_dll_path)
 {
     // load library dependencies
     wxArrayString deplibs;
+    wxString js_dll_path;
     GetDependentLibraryList(xpcom_dll_path, deplibs);
     size_t i, count = deplibs.GetCount();
     for (i = 0; i < count; ++i)
@@ -169,7 +193,12 @@ nsresult XPCOMGlueStartup(const char* xpcom_dll_path)
             // XXX: It is possible to get the actual error message with
             // GetLastError() and FormatMessage(), but I'm too lazy to do it
             // right now.
-            fprintf(stderr, "LoadLibraryExA %s failed!\n", deplibs.Item(i).mbc_str());
+            fprintf(stderr, "LoadLibraryExA %s failed with errno %u!\n", deplibs.Item(i).mbc_str(), GetLastError());
+        }
+        if ((deplibs.Item(i).find(wxT("mozjs")) != wxString::npos) ||
+                (deplibs.Item(i).AfterLast(XPCOM_PATH_SEPARATOR).find(wxT("js")) == 0))
+        {
+            js_dll_path = deplibs.Item(i);
         }
     }
     
@@ -182,7 +211,7 @@ nsresult XPCOMGlueStartup(const char* xpcom_dll_path)
     
     if (!f)
     {
-        fprintf(stderr, "LoadLibraryExA %s failed!\n", xpcom_dll_path);
+        fprintf(stderr, "LoadLibraryExA %s failed with errno %u!\n", xpcom_dll_path, GetLastError());
         FreeLibrary(h);
         return NS_ERROR_FAILURE;
     }
@@ -193,6 +222,12 @@ nsresult XPCOMGlueStartup(const char* xpcom_dll_path)
     res = f(&funcs, xpcom_dll_path);
     
     if (NS_FAILED(res))
+    {
+        FreeLibrary(h);
+        return NS_ERROR_FAILURE;
+    }
+
+    if (js_dll_path.empty() || !SetupJSFunctions(js_dll_path.mbc_str()))
     {
         FreeLibrary(h);
         return NS_ERROR_FAILURE;
@@ -207,6 +242,7 @@ nsresult XPCOMGlueStartup(const char* xpcom_dll_path)
 {
     // load library dependencies
     wxArrayString deplibs;
+    wxString js_dll_path;
     GetDependentLibraryList(xpcom_dll_path, deplibs);
     size_t i, count = deplibs.GetCount();
     for (i = 0; i < count; ++i)
@@ -214,7 +250,18 @@ nsresult XPCOMGlueStartup(const char* xpcom_dll_path)
         void *handle = dlopen(deplibs.Item(i).mbc_str(), RTLD_GLOBAL | RTLD_LAZY);
         if (!handle)
         {
-            wxLogError(wxT("dlopen %s failed! Error:\n%s"), deplibs.Item(i).c_str(),wxString::FromAscii(dlerror()).c_str());
+            // Check if the library can be loaded from the system path rather than the XULRunner directory.
+            void *handle = dlopen(deplibs.Item(i).AfterLast(XPCOM_PATH_SEPARATOR).mbc_str(), RTLD_GLOBAL | RTLD_LAZY);
+            if (!handle)
+            {
+                wxLogError(wxT("dlopen %s failed! Error:\n%s"), deplibs.Item(i).c_str(), wxString::FromAscii(dlerror()).c_str());
+            }
+        }
+
+        if ((deplibs.Item(i).find(wxT("mozjs")) != wxString::npos) ||
+                (deplibs.Item(i).AfterLast(XPCOM_PATH_SEPARATOR).find(wxT("js")) == 0))
+        {
+            js_dll_path = deplibs.Item(i);
         }
     }
     
@@ -227,8 +274,7 @@ nsresult XPCOMGlueStartup(const char* xpcom_dll_path)
         return NS_ERROR_FAILURE;
     }
         
-    GetFrozenFunctionsFunc f =
-    f = (GetFrozenFunctionsFunc)dlsym(h, "NS_GetFrozenFunctions");
+    GetFrozenFunctionsFunc f = (GetFrozenFunctionsFunc)dlsym(h, "NS_GetFrozenFunctions");
     if (!f)
     {
         dlclose(h);
@@ -246,11 +292,33 @@ nsresult XPCOMGlueStartup(const char* xpcom_dll_path)
         return NS_ERROR_FAILURE;
     }
 
+    if (js_dll_path.empty() || !SetupJSFunctions(js_dll_path.mbc_str()))
+    {
+        dlclose(h);
+        return NS_ERROR_FAILURE;
+    }
+
     return 0;
 }
 
 #endif
 
+bool SetupJSFunctions(const char* js_dll_path)
+{
+    // now load the functions from mozjs.dll
+    HandleType h = LoadLibraryImpl(js_dll_path);
+    if (!h)
+    {
+        fprintf(stderr, "LoadLibraryImpl %s failed!\n", js_dll_path);
+        return false;
+    }
+
+    GetFunctionImpl(h, JS_ValueToString);
+    GetFunctionImpl(h, JS_EncodeString);
+    GetFunctionImpl(h, JS_free);
+
+    return true;
+}
 
 nsresult NS_InitXPCOM2(nsIServiceManager** result,
                        nsIFile* bin_directory,

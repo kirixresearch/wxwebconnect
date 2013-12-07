@@ -1835,7 +1835,6 @@ bool GeckoEngine::Init()
     #else
     xpcom_path += "libxpcom.so";
     #endif
-
         
     if (NS_FAILED(XPCOMGlueStartup(xpcom_path.c_str())))
         return false;
@@ -3015,7 +3014,6 @@ wxString wxWebControl::GetCurrentURI() const
 
 bool wxWebControl::SetContent(const wxString& strBaseURI, const wxString& strContent, const wxString& strContentType)
 {
-    nsresult rv;
     m_content_loaded = false;
 
     ns_smartptr<nsIURI> uri;
@@ -4357,10 +4355,20 @@ public:
 
 //NS_DEFINE_STATIC_IID_ACCESSOR(nsIScriptContext, NS_ISCRIPTCONTEXT_IID)
 
-
-
-
 bool wxWebControl::Execute(const wxString& js_code)
+{
+    wxString result;
+    return ExecuteJSCode(js_code, result);
+}
+
+wxString wxWebControl::ExecuteScriptWithResult(const wxString& js_code)
+{
+    wxString result;
+    ExecuteJSCode(js_code, result);
+    return result;
+}
+
+bool wxWebControl::ExecuteJSCode(const wxString& js_code, wxString &result)
 {
     nsresult rv;
 
@@ -4377,7 +4385,7 @@ bool wxWebControl::Execute(const wxString& js_code)
     ns_smartptr<nsIScriptGlobalObject> sgo = nsRequestInterface(m_ptrs->m_web_browser);
     if (sgo.empty())
         return false;
-    ns_smartptr<nsIScriptContext> ctx = sgo->GetContext();
+    ns_smartptr<nsIScriptContext> ctx = sgo->GetScriptContext(nsIProgrammingLanguage::JAVASCRIPT);
     if (ctx.empty())
         return false;
 
@@ -4385,15 +4393,34 @@ bool wxWebControl::Execute(const wxString& js_code)
     wx2ns(js_code, str);
 
     jsval out;
+    PRBool isUndefined;
     rv = ctx->EvaluateStringWithValue(
         str,
-        sgo->GetGlobalJSObject(),
+        (JSObject *)sgo->GetScriptGlobal(nsIProgrammingLanguage::JAVASCRIPT),
         principal,
-        "mozembed",
+        "wxWebConnect",
         0,
         nsnull,
         &out,
-        nsnull);
+        &isUndefined);
         
+    if (NS_FAILED(rv))  {
+        return false;
+    }
+
+    if (isUndefined)    {
+        return false;
+    }
+
+    // XXX: Root this variable properly to prevent GC?
+    JSContext *jscontext = ctx->GetNativeContext();
+    JSString *jsstring = JS_ValueToStringImpl(jscontext, out);
+    if (jsstring)  {
+        char *utf8_str = JS_EncodeStringImpl(jscontext, jsstring);
+        wxString _wxString(utf8_str, wxConvUTF8);
+        result = _wxString;
+        JS_freeImpl(jscontext, utf8_str);
+    }
+
     return true;
 }

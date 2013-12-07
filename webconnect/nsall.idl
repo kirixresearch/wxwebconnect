@@ -63,7 +63,7 @@ typedef unsigned long long PRTime;
 //typedef jsword jsval;
 %{C++
 struct JSObject;
-typedef long jsval;
+typedef unsigned long long jsval;
 %}
 native JSVal(jsval);
 

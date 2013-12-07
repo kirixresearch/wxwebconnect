@@ -23,7 +23,7 @@ typedef PRUint64 PRTime;
 
 #endif
 struct JSObject;
-typedef long jsval;
+typedef unsigned long long jsval;
 
 /* starting interface:    nsISupports */
 #define NS_ISUPPORTS_IID_STR "00000000-0000-0000-c000-000000000046"
